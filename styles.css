@@ -64,6 +64,31 @@ a {
   text-decoration: none;
 }
 
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  transform: translateY(-160%);
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  color: #ffffff;
+  background: var(--ink);
+  font-weight: 800;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent), transparent 55%);
+  outline-offset: 2px;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -143,6 +168,10 @@ a {
 .icon-button:hover,
 .save-button:hover {
   border-color: var(--accent);
+}
+
+.card-top .save-button {
+  grid-area: save;
 }
 
 main {
@@ -268,6 +297,24 @@ h2 {
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 12px;
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.filter-pill {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent), var(--line) 36%);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent), transparent 91%);
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 800;
 }
 
 .chip,
@@ -464,12 +511,16 @@ select {
 
 .card-top {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto 40px;
-  align-items: center;
+  grid-template-areas:
+    "icon title save"
+    "icon score save";
+  grid-template-columns: 44px minmax(0, 1fr) 40px;
+  align-items: start;
   gap: 10px;
 }
 
 .tool-icon {
+  grid-area: icon;
   width: 44px;
   height: 44px;
   border: 1px solid var(--line);
@@ -478,6 +529,7 @@ select {
 }
 
 .tool-title {
+  grid-area: title;
   min-width: 0;
 }
 
@@ -498,6 +550,8 @@ select {
 }
 
 .score-badge {
+  grid-area: score;
+  justify-self: start;
   display: inline-grid;
   place-items: center;
   min-width: 42px;
@@ -620,6 +674,11 @@ select {
   background: var(--surface-strong);
 }
 
+.stack-item {
+  display: grid;
+  gap: 8px;
+}
+
 .stack-item strong,
 .compare-item strong {
   display: block;
@@ -632,6 +691,48 @@ select {
   font-size: 13px;
   line-height: 1.45;
   white-space: pre-line;
+}
+
+.stack-tools,
+.compare-tags,
+.compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stack-tools .tag,
+.compare-tags .tag {
+  background: color-mix(in srgb, var(--accent), transparent 90%);
+  color: var(--accent);
+}
+
+.stack-apply {
+  justify-self: start;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.stack-apply:hover,
+.compact-button:hover {
+  border-color: var(--accent);
+}
+
+.compare-item {
+  display: grid;
+  gap: 8px;
+}
+
+.compact-button {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
 }
 
 .compare-title {

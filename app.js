@@ -718,31 +718,41 @@ const stacks = [
   {
     title: "论文速读",
     tools: ["秘塔AI搜索", "Semantic Scholar", "SciSpace"],
+    category: "学术研究",
+    scenario: "paper",
     note: "先搜资料，再追引用，最后解释难段落。",
   },
   {
     title: "短视频生产",
     tools: ["即梦AI", "可灵AI", "ElevenLabs"],
+    category: "视频创作",
+    scenario: "video",
     note: "先做视觉草稿，再生成镜头和旁白。",
   },
   {
     title: "Web MVP",
     tools: ["v0", "Lovable", "Cursor"],
+    category: "编程开发",
+    scenario: "code",
     note: "先出界面，再生成原型，最后进代码库收口。",
   },
   {
     title: "Agent 工作台",
     tools: ["Claude Code", "OpenClaw", "Hermes Agent"],
+    category: "自动化智能体",
+    scenario: "automation",
     note: "代码任务用 Claude Code，统一入口用 OpenClaw，个人自动化用 Hermes。",
   },
   {
     title: "本地隐私",
     tools: ["Ollama", "LM Studio", "Dify"],
+    category: "本地开源",
+    scenario: "local",
     note: "本地模型加应用编排，适合私有知识库。",
   },
 ];
 
-const state = {
+const defaultFilters = {
   query: "",
   category: "全部",
   price: "all",
@@ -751,8 +761,12 @@ const state = {
   scenario: "all",
   sort: "score",
   favoritesOnly: false,
-  favorites: new Set(JSON.parse(localStorage.getItem("aiark:favorites") || "[]")),
-  compare: new Set(JSON.parse(localStorage.getItem("aiark:compare") || "[]")),
+};
+
+const state = {
+  ...defaultFilters,
+  favorites: readStoredSet("favorites"),
+  compare: readStoredSet("compare"),
 };
 
 const elements = {
@@ -766,6 +780,7 @@ const elements = {
   favoritesOnly: document.querySelector("#favoritesOnly"),
   resetFilters: document.querySelector("#resetFilters"),
   copyFilters: document.querySelector("#copyFilters"),
+  activeFilters: document.querySelector("#activeFilters"),
   categoryButtons: document.querySelector("#categoryButtons"),
   toolGrid: document.querySelector("#toolGrid"),
   resultCount: document.querySelector("#resultCount"),
@@ -784,6 +799,23 @@ const elements = {
   themeToggle: document.querySelector("#themeToggle"),
   template: document.querySelector("#toolCardTemplate"),
 };
+
+function readStoredSet(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(`aiark:${key}`) || "[]");
+    return new Set(Array.isArray(value) ? value : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveStoredSet(key, value) {
+  try {
+    localStorage.setItem(`aiark:${key}`, JSON.stringify([...value]));
+  } catch {
+    // Keep the UI usable when storage is blocked.
+  }
+}
 
 function favicon(domain) {
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
@@ -825,6 +857,45 @@ function createTextElement(tagName, className, text) {
   if (className) element.className = className;
   element.textContent = text;
   return element;
+}
+
+function getActiveFilterItems() {
+  const items = [];
+  if (state.query) items.push({ key: "query", label: `关键词：${state.query}` });
+  if (state.category !== defaultFilters.category) items.push({ key: "category", label: `分类：${state.category}` });
+  if (state.price !== defaultFilters.price) items.push({ key: "price", label: `价格：${priceLabel[state.price]}` });
+  if (state.region !== defaultFilters.region) items.push({ key: "region", label: `地区：${state.region}` });
+  if (state.capability !== defaultFilters.capability) {
+    items.push({ key: "capability", label: `能力：${capabilityLabel[state.capability]}` });
+  }
+  if (state.scenario !== defaultFilters.scenario) items.push({ key: "scenario", label: `任务：${scenarioLabel(state.scenario)}` });
+  if (state.favoritesOnly) items.push({ key: "favoritesOnly", label: "只看收藏" });
+  if (state.sort !== defaultFilters.sort) {
+    const sortLabel = { name: "名称 A-Z", price: "免费优先" }[state.sort] || "AIark 推荐";
+    items.push({ key: "sort", label: `排序：${sortLabel}` });
+  }
+  return items;
+}
+
+function clearFilter(key) {
+  state[key] = defaultFilters[key];
+  render();
+}
+
+function renderActiveFilters() {
+  const items = getActiveFilterItems();
+  elements.activeFilters.innerHTML = "";
+  elements.activeFilters.hidden = items.length === 0;
+
+  items.forEach((item) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-pill";
+    button.textContent = `${item.label} ×`;
+    button.setAttribute("aria-label", `移除${item.label}`);
+    button.addEventListener("click", () => clearFilter(item.key));
+    elements.activeFilters.append(button);
+  });
 }
 
 function toolMatches(tool) {
@@ -917,7 +988,7 @@ function toggleSet(key, name) {
   const target = state[key];
   if (target.has(name)) target.delete(name);
   else target.add(name);
-  localStorage.setItem(`aiark:${key}`, JSON.stringify([...target]));
+  saveStoredSet(key, target);
   render();
 }
 
@@ -931,7 +1002,7 @@ function toggleCompare(name) {
     }
     state.compare.add(name);
   }
-  localStorage.setItem("aiark:compare", JSON.stringify([...state.compare]));
+  saveStoredSet("compare", state.compare);
   render();
 }
 
@@ -998,10 +1069,32 @@ function renderStacks() {
     const item = document.createElement("article");
     item.className = "stack-item";
     item.append(createTextElement("strong", "", stack.title));
-    const detail = createTextElement("span", "", `${stack.tools.join(" + ")}\n${stack.note}`);
-    item.append(detail);
+
+    const tools = document.createElement("div");
+    tools.className = "stack-tools";
+    stack.tools.forEach((tool) => tools.append(createTag(tool)));
+    item.append(tools);
+
+    item.append(createTextElement("span", "", stack.note));
+
+    const applyButton = document.createElement("button");
+    applyButton.type = "button";
+    applyButton.className = "stack-apply";
+    applyButton.textContent = "套用";
+    applyButton.addEventListener("click", () => applyStack(stack));
+    item.append(applyButton);
+
     elements.stackList.append(item);
   });
+}
+
+function applyStack(stack) {
+  state.query = "";
+  state.category = stack.category;
+  state.scenario = stack.scenario;
+  state.favoritesOnly = false;
+  render();
+  document.querySelector("#directory")?.scrollIntoView({ block: "start", behavior: "smooth" });
 }
 
 function renderCompare() {
@@ -1021,19 +1114,36 @@ function renderCompare() {
     item.className = "compare-item";
     item.append(createTextElement("strong", "", tool.name));
     item.append(createTextElement("span", "", `${priceLabel[tool.price]} · ${tool.region}\n${tool.bestFor}`));
+
+    const capabilityRow = document.createElement("div");
+    capabilityRow.className = "compare-tags";
+    tool.capabilities.forEach((capability) => capabilityRow.append(createTag(capabilityLabel[capability] || capability)));
+    item.append(capabilityRow);
+
+    const actions = document.createElement("div");
+    actions.className = "compare-actions";
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "text-button compact-button";
+    removeButton.textContent = "移除";
+    removeButton.addEventListener("click", () => toggleCompare(tool.name));
+
+    const visitLink = document.createElement("a");
+    visitLink.className = "text-button compact-button";
+    visitLink.href = tool.url;
+    visitLink.target = "_blank";
+    visitLink.rel = "noreferrer";
+    visitLink.textContent = "直达";
+
+    actions.append(removeButton, visitLink);
+    item.append(actions);
     elements.compareList.append(item);
   });
 }
 
 function resetFilters() {
-  state.query = "";
-  state.category = "全部";
-  state.price = "all";
-  state.region = "all";
-  state.capability = "all";
-  state.scenario = "all";
-  state.sort = "score";
-  state.favoritesOnly = false;
+  Object.assign(state, defaultFilters);
   render();
 }
 
@@ -1088,6 +1198,7 @@ function render() {
   elements.savedCount.textContent = state.favorites.size;
 
   renderFilters();
+  renderActiveFilters();
   renderStacks();
   renderCompare();
 }
@@ -1096,6 +1207,12 @@ function bindEvents() {
   elements.searchInput.addEventListener("input", (event) => {
     state.query = event.target.value.trim();
     render();
+  });
+  elements.searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && state.query) {
+      state.query = "";
+      render();
+    }
   });
   elements.categorySelect.addEventListener("change", (event) => {
     state.category = event.target.value;
@@ -1126,20 +1243,28 @@ function bindEvents() {
   elements.copyFilters.addEventListener("click", copyFilterUrl);
   elements.clearCompare.addEventListener("click", () => {
     state.compare.clear();
-    localStorage.setItem("aiark:compare", "[]");
+    saveStoredSet("compare", state.compare);
     render();
   });
   elements.themeToggle.addEventListener("click", () => {
     const root = document.documentElement;
     const next = root.dataset.theme === "dark" ? "light" : "dark";
     root.dataset.theme = next;
-    localStorage.setItem("aiark:theme", next);
+    try {
+      localStorage.setItem("aiark:theme", next);
+    } catch {
+      // Theme still changes for the current session.
+    }
   });
 }
 
 function initTheme() {
-  const saved = localStorage.getItem("aiark:theme");
-  if (saved) document.documentElement.dataset.theme = saved;
+  try {
+    const saved = localStorage.getItem("aiark:theme");
+    if (saved) document.documentElement.dataset.theme = saved;
+  } catch {
+    // Use the default theme when storage is unavailable.
+  }
 }
 
 function initFilters() {

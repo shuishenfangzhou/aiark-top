@@ -15,9 +15,12 @@
     <meta property="og:url" content="https://www.ai-ark.top" />
     <meta property="og:site_name" content="AIark.top" />
     <link rel="canonical" href="https://www.ai-ark.top" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#directory">跳到工具库</a>
+
     <header class="topbar">
       <a class="brand" href="/" aria-label="AIark 首页">
         <span class="brand-mark">A</span>
@@ -65,6 +68,8 @@
             <button class="utility-button" id="resetFilters" type="button">重置筛选</button>
             <button class="utility-button" id="copyFilters" type="button">复制筛选链接</button>
           </div>
+
+          <div class="active-filters" id="activeFilters" aria-label="当前筛选" hidden></div>
 
           <div class="filter-grid" aria-label="筛选器">
             <label>
