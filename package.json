@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "npx --yes serve . -l 4173",
+    "lint": "npm run check",
+    "build": "npm run check",
     "check": "node --check app.js"
   }
 }

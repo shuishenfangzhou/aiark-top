@@ -36,6 +36,24 @@ const capabilityLabel = {
   mobile: "移动端",
 };
 
+const categoryMeta = {
+  全部: { icon: "全", label: "全部" },
+  对话助手: { icon: "聊", label: "对话助手" },
+  AI搜索: { icon: "搜", label: "AI搜索" },
+  写作办公: { icon: "写", label: "写作办公" },
+  图像设计: { icon: "图", label: "图像设计" },
+  视频创作: { icon: "视", label: "视频创作" },
+  编程开发: { icon: "码", label: "编程开发" },
+  自动化智能体: { icon: "自", label: "自动化智能体" },
+  学术研究: { icon: "研", label: "学术研究" },
+  本地开源: { icon: "本", label: "本地开源" },
+  音频语音: { icon: "音", label: "音频语音" },
+};
+
+const themeModes = ["light", "dark", "system"];
+const sidebarModes = ["full", "compact", "hidden"];
+const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
 const tools = [
   {
     name: "ChatGPT",
@@ -765,11 +783,16 @@ const defaultFilters = {
 
 const state = {
   ...defaultFilters,
+  theme: getInitialTheme(),
+  sidebarMode: getInitialSidebarMode(),
+  mobileSidebarOpen: false,
+  themeMenuOpen: false,
   favorites: readStoredSet("favorites"),
   compare: readStoredSet("compare"),
 };
 
 const elements = {
+  body: document.body,
   searchInput: document.querySelector("#searchInput"),
   categorySelect: document.querySelector("#categorySelect"),
   priceSelect: document.querySelector("#priceSelect"),
@@ -797,6 +820,17 @@ const elements = {
   compareList: document.querySelector("#compareList"),
   clearCompare: document.querySelector("#clearCompare"),
   themeToggle: document.querySelector("#themeToggle"),
+  themeIcon: document.querySelector("#themeIcon"),
+  themeMenu: document.querySelector("#themeMenu"),
+  themeOptions: document.querySelector("#themeOptions"),
+  themeChoices: document.querySelectorAll("[data-theme-choice]"),
+  mobileSidebarOpen: document.querySelector("#mobileSidebarOpen"),
+  mobileSidebarClose: document.querySelector("#mobileSidebarClose"),
+  sidebarOverlay: document.querySelector("#sidebarOverlay"),
+  sidebarCompactToggle: document.querySelector("#sidebarCompactToggle"),
+  sidebarHideToggle: document.querySelector("#sidebarHideToggle"),
+  sidebarReveal: document.querySelector("#sidebarReveal"),
+  categoryRail: document.querySelector("#categoryRail"),
   template: document.querySelector("#toolCardTemplate"),
 };
 
@@ -815,6 +849,32 @@ function saveStoredSet(key, value) {
   } catch {
     // Keep the UI usable when storage is blocked.
   }
+}
+
+function readStoredValue(key, fallback) {
+  try {
+    return localStorage.getItem(key) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveStoredValue(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Current-session state still works when storage is blocked.
+  }
+}
+
+function getInitialTheme() {
+  const saved = readStoredValue("theme", readStoredValue("aiark:theme", "system"));
+  return themeModes.includes(saved) ? saved : "system";
+}
+
+function getInitialSidebarMode() {
+  const saved = readStoredValue("sidebar-mode", "full");
+  return sidebarModes.includes(saved) ? saved : "full";
 }
 
 function favicon(domain) {
@@ -857,6 +917,89 @@ function createTextElement(tagName, className, text) {
   if (className) element.className = className;
   element.textContent = text;
   return element;
+}
+
+function resolveTheme(mode) {
+  if (mode === "system") return systemThemeQuery.matches ? "dark" : "light";
+  return mode;
+}
+
+function applyTheme() {
+  const resolved = resolveTheme(state.theme);
+  document.documentElement.dataset.themeMode = state.theme;
+  document.documentElement.dataset.theme = resolved;
+
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.content = resolved === "dark" ? "#101419" : "#126b5f";
+
+  const label = { light: "浅色", dark: "深色", system: "跟随系统" }[state.theme];
+  const icon = { light: "○", dark: "●", system: "◐" }[state.theme];
+  elements.themeIcon.textContent = icon;
+  elements.themeToggle.title = `当前：${label}`;
+  elements.themeToggle.setAttribute("aria-label", `切换主题，当前为${label}`);
+
+  elements.themeChoices.forEach((button) => {
+    const checked = button.dataset.themeChoice === state.theme;
+    button.classList.toggle("is-active", checked);
+    button.setAttribute("aria-checked", String(checked));
+  });
+}
+
+function setTheme(mode) {
+  if (!themeModes.includes(mode)) return;
+  state.theme = mode;
+  saveStoredValue("theme", mode);
+  closeThemeMenu();
+  applyTheme();
+}
+
+function toggleThemeMenu() {
+  setThemeMenuOpen(!state.themeMenuOpen);
+}
+
+function setThemeMenuOpen(open) {
+  state.themeMenuOpen = open;
+  elements.themeOptions.hidden = !open;
+  elements.themeToggle.setAttribute("aria-expanded", String(open));
+}
+
+function closeThemeMenu() {
+  setThemeMenuOpen(false);
+}
+
+function applySidebarMode(save = false) {
+  elements.body.dataset.sidebarMode = state.sidebarMode;
+  elements.sidebarReveal.hidden = state.sidebarMode !== "hidden";
+  elements.sidebarCompactToggle.setAttribute("aria-pressed", String(state.sidebarMode === "compact"));
+  elements.sidebarCompactToggle.setAttribute(
+    "aria-label",
+    state.sidebarMode === "compact" ? "展开完整侧栏" : "简化侧栏",
+  );
+  elements.sidebarCompactToggle.title = state.sidebarMode === "compact" ? "展开完整侧栏" : "简化侧栏";
+  elements.sidebarHideToggle.setAttribute("aria-pressed", String(state.sidebarMode === "hidden"));
+  if (save) saveStoredValue("sidebar-mode", state.sidebarMode);
+}
+
+function setSidebarMode(mode) {
+  if (!sidebarModes.includes(mode)) return;
+  state.sidebarMode = mode;
+  applySidebarMode(true);
+}
+
+function toggleCompactSidebar() {
+  setSidebarMode(state.sidebarMode === "compact" ? "full" : "compact");
+}
+
+function setMobileSidebarOpen(open) {
+  state.mobileSidebarOpen = open;
+  elements.body.classList.toggle("mobile-sidebar-open", open);
+  elements.sidebarOverlay.hidden = !open;
+  elements.mobileSidebarOpen.setAttribute("aria-expanded", String(open));
+  elements.categoryRail.setAttribute("aria-hidden", String(!open && window.matchMedia("(max-width: 780px)").matches));
+}
+
+function closeMobileSidebar() {
+  setMobileSidebarOpen(false);
 }
 
 function getActiveFilterItems() {
@@ -962,6 +1105,7 @@ function renderCard(tool) {
   node.querySelector(".watch-out").textContent = tool.watchOut;
   scoreBadge.textContent = `${tool.score}分`;
   visitLink.href = tool.url;
+  visitLink.title = `打开 ${tool.name} 官网`;
 
   const tags = node.querySelector(".tag-row");
   const priceClass = tool.price === "paid" ? "price-paid" : "price-free";
@@ -1023,15 +1167,20 @@ function renderFilters() {
 
   elements.categoryButtons.innerHTML = "";
   categories.forEach((category) => {
+    const meta = categoryMeta[category] || { icon: category.slice(0, 1), label: category };
     const button = document.createElement("button");
     button.type = "button";
     button.className = "category-button";
+    button.title = `${meta.label}，${counts[category] || 0} 个工具`;
+    button.setAttribute("aria-label", `${meta.label}，${counts[category] || 0} 个工具`);
     button.classList.toggle("is-active", state.category === category);
-    button.append(createTextElement("span", "", category));
-    button.append(createTextElement("span", "", String(counts[category] || 0)));
+    button.append(createTextElement("span", "category-icon", meta.icon));
+    button.append(createTextElement("span", "category-name", meta.label));
+    button.append(createTextElement("span", "category-count", String(counts[category] || 0)));
     button.addEventListener("click", () => {
       state.category = category;
       elements.categorySelect.value = category;
+      closeMobileSidebar();
       render();
     });
     elements.categoryButtons.append(button);
@@ -1246,25 +1395,37 @@ function bindEvents() {
     saveStoredSet("compare", state.compare);
     render();
   });
-  elements.themeToggle.addEventListener("click", () => {
-    const root = document.documentElement;
-    const next = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("aiark:theme", next);
-    } catch {
-      // Theme still changes for the current session.
+  elements.themeToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleThemeMenu();
+  });
+  elements.themeChoices.forEach((button) => {
+    button.addEventListener("click", () => setTheme(button.dataset.themeChoice));
+  });
+  elements.sidebarCompactToggle.addEventListener("click", toggleCompactSidebar);
+  elements.sidebarHideToggle.addEventListener("click", () => setSidebarMode("hidden"));
+  elements.sidebarReveal.addEventListener("click", () => setSidebarMode("full"));
+  elements.mobileSidebarOpen.addEventListener("click", () => setMobileSidebarOpen(true));
+  elements.mobileSidebarClose.addEventListener("click", closeMobileSidebar);
+  elements.sidebarOverlay.addEventListener("click", closeMobileSidebar);
+  document.addEventListener("click", (event) => {
+    if (state.themeMenuOpen && !elements.themeMenu.contains(event.target)) closeThemeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeThemeMenu();
+      closeMobileSidebar();
     }
+  });
+  systemThemeQuery.addEventListener("change", () => {
+    if (state.theme === "system") applyTheme();
   });
 }
 
-function initTheme() {
-  try {
-    const saved = localStorage.getItem("aiark:theme");
-    if (saved) document.documentElement.dataset.theme = saved;
-  } catch {
-    // Use the default theme when storage is unavailable.
-  }
+function initUiState() {
+  applyTheme();
+  applySidebarMode(false);
+  setMobileSidebarOpen(false);
 }
 
 function initFilters() {
@@ -1285,7 +1446,7 @@ function initFilters() {
   state.favoritesOnly = params.get("favorites") === "1";
 }
 
-initTheme();
+initUiState();
 initFilters();
 bindEvents();
 render();
