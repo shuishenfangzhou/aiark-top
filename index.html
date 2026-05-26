@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AIark.top - AI 工具导航与任务清单</title>
+    <meta
+      name="description"
+      content="AIark.top 是任务驱动的 AI 工具导航，按写作、搜索、绘图、视频、编程、办公、自动化等场景快速筛选、收藏和对比 AI 工具。"
+    />
+    <meta name="theme-color" content="#126b5f" />
+    <meta property="og:title" content="AIark.top - AI 工具导航与任务清单" />
+    <meta property="og:description" content="按任务找到可信、好用、可收藏、可对比的 AI 工具。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.ai-ark.top" />
+    <meta property="og:site_name" content="AIark.top" />
+    <link rel="canonical" href="https://www.ai-ark.top" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="AIark 首页">
+        <span class="brand-mark">A</span>
+        <span>
+          <strong>AIark</strong>
+          <small>AI 工具方舟</small>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="主导航">
+        <a href="#directory">工具库</a>
+        <a href="#stacks">工具组合</a>
+        <a href="#submit">提交工具</a>
+      </nav>
+
+      <button class="icon-button" id="themeToggle" type="button" aria-label="切换深浅色" title="切换深浅色">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="workspace" id="directory">
+        <div class="workspace-head">
+          <div>
+            <p class="eyebrow">按任务找工具</p>
+            <h1><span>更快找到真正能用的</span><span>AI 工具</span></h1>
+            <p class="hero-copy">从真实工作任务出发，先筛选场景，再比较价格、可用地区、API、团队协作和本地部署能力。</p>
+          </div>
+          <div class="stats" aria-label="工具统计">
+            <span><strong id="toolCount">0</strong> 个工具</span>
+            <span><strong id="categoryCount">0</strong> 个场景</span>
+          </div>
+        </div>
+
+        <div class="search-panel">
+          <label class="search-box" for="searchInput">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="搜索工具、任务、关键词，例如：论文、视频、代码、免费" autocomplete="off" />
+          </label>
+
+          <div class="quick-row" id="scenarioFilters" aria-label="任务快捷筛选"></div>
+
+          <div class="action-row" aria-label="常用操作">
+            <button class="utility-button" id="favoritesOnly" type="button" aria-pressed="false">☆ 只看收藏</button>
+            <button class="utility-button" id="resetFilters" type="button">重置筛选</button>
+            <button class="utility-button" id="copyFilters" type="button">复制筛选链接</button>
+          </div>
+
+          <div class="filter-grid" aria-label="筛选器">
+            <label>
+              <span>分类</span>
+              <select id="categorySelect"></select>
+            </label>
+            <label>
+              <span>价格</span>
+              <select id="priceSelect">
+                <option value="all">全部</option>
+                <option value="free">免费可用</option>
+                <option value="freemium">免费增值</option>
+                <option value="paid">付费优先</option>
+              </select>
+            </label>
+            <label>
+              <span>地区</span>
+              <select id="regionSelect">
+                <option value="all">全部</option>
+                <option value="国内">国内可用</option>
+                <option value="海外">海外工具</option>
+              </select>
+            </label>
+            <label>
+              <span>能力</span>
+              <select id="capabilitySelect">
+                <option value="all">全部</option>
+                <option value="api">支持 API</option>
+                <option value="team">团队协作</option>
+                <option value="local">可本地/开源</option>
+                <option value="mobile">移动端友好</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="insight-strip" aria-label="工具库概览">
+            <span><strong id="freeCount">0</strong> 免费可用</span>
+            <span><strong id="apiCount">0</strong> 支持 API</span>
+            <span><strong id="localCount">0</strong> 本地/开源</span>
+            <span><strong id="savedCount">0</strong> 已收藏</span>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <aside class="left-rail" aria-label="分类">
+            <div class="rail-title">场景分类</div>
+            <div id="categoryButtons" class="category-list"></div>
+          </aside>
+
+          <section class="results" aria-live="polite">
+            <div class="results-head">
+              <div>
+                <strong id="resultCount">0</strong>
+                <span id="resultLabel">个结果</span>
+              </div>
+              <div class="sort-group">
+                <label for="sortSelect">排序</label>
+                <select id="sortSelect">
+                  <option value="score">AIark 推荐</option>
+                  <option value="name">名称 A-Z</option>
+                  <option value="price">免费优先</option>
+                </select>
+              </div>
+            </div>
+            <div id="toolGrid" class="tool-grid"></div>
+            <div id="emptyState" class="empty-state" hidden>
+              <strong>没有匹配结果</strong>
+              <span>换一个关键词，或减少筛选条件。</span>
+              <button id="emptyReset" class="utility-button" type="button">重置筛选</button>
+            </div>
+          </section>
+
+          <aside class="right-rail" aria-label="推荐组合">
+            <section class="stack-box" id="stacks">
+              <div class="rail-title">今日工具组合</div>
+              <div id="stackList" class="stack-list"></div>
+            </section>
+
+            <section class="compare-box">
+              <div class="compare-title">
+                <span>对比栏 <small>最多 4 个</small></span>
+                <button id="clearCompare" class="text-button" type="button">清空</button>
+              </div>
+              <div id="compareList" class="compare-list"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="submit-band" id="submit">
+        <div>
+          <p class="eyebrow">AIark 收录标准</p>
+          <h2>先验证，再推荐</h2>
+          <p>每个工具保留适合场景、价格线索、直达链接和避坑提醒，后续可加入真实用户评分、更新监控和失效检测。</p>
+        </div>
+        <a class="primary-link" href="mailto:submit@aiark.top?subject=提交 AI 工具">提交工具 ↗</a>
+      </section>
+    </main>
+
+    <template id="toolCardTemplate">
+      <article class="tool-card">
+        <div class="card-top">
+          <img class="tool-icon" alt="" loading="lazy" />
+          <div class="tool-title">
+            <h3></h3>
+            <span class="domain"></span>
+          </div>
+          <span class="score-badge" aria-label="AIark 推荐分"></span>
+          <button class="save-button" type="button" aria-label="收藏工具" title="收藏工具">☆</button>
+        </div>
+        <p class="tool-desc"></p>
+        <dl class="tool-meta">
+          <div>
+            <dt>适合</dt>
+            <dd class="best-for"></dd>
+          </div>
+          <div>
+            <dt>注意</dt>
+            <dd class="watch-out"></dd>
+          </div>
+        </dl>
+        <div class="tag-row"></div>
+        <div class="card-actions">
+          <button class="compare-button" type="button">加入对比</button>
+          <a class="visit-link" target="_blank" rel="noreferrer">直达 ↗</a>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
