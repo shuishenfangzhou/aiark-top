@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "npx --yes serve . -l 4173",
+    "generate:seo": "node scripts/generate-seo-pages.mjs",
     "lint": "npm run check",
-    "build": "npm run check",
+    "build": "npm run generate:seo && npm run check",
     "check": "node --check app.js"
   }
 }

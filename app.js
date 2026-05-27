@@ -19,8 +19,12 @@ const scenarios = [
   { label: "做视频", value: "video" },
   { label: "写代码", value: "code" },
   { label: "做PPT", value: "slides" },
+  { label: "Web MVP", value: "web-mvp" },
   { label: "自动化", value: "automation" },
   { label: "本地部署", value: "local" },
+  { label: "简历优化", value: "resume" },
+  { label: "AI编程", value: "ai-coding" },
+  { label: "电商运营", value: "ecommerce" },
 ];
 
 const priceLabel = {
@@ -52,6 +56,7 @@ const categoryMeta = {
 
 const themeModes = ["light", "dark", "system"];
 const sidebarModes = ["full", "compact", "hidden"];
+const cardViewModes = ["standard", "compact"];
 const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const tools = [
@@ -470,7 +475,7 @@ const tools = [
     capabilities: ["team"],
     score: 95,
     tags: ["IDE", "Agent", "代码"],
-    scenarios: ["code"],
+    scenarios: ["code", "web-mvp"],
     description: "AI 优先代码编辑器，适合在真实代码库里改代码、问项目、重构和调试。",
     bestFor: "日常开发、跨文件修改、代码理解。",
     watchOut: "大型改动仍要跑测试和代码审查。",
@@ -485,7 +490,7 @@ const tools = [
     capabilities: ["team"],
     score: 90,
     tags: ["补全", "代码", "GitHub"],
-    scenarios: ["code"],
+    scenarios: ["code", "web-mvp"],
     description: "深度集成开发工具和 GitHub 工作流，适合代码补全、解释和日常开发辅助。",
     bestFor: "已有 GitHub 工作流的团队。",
     watchOut: "生成代码需要安全和许可证审查。",
@@ -530,7 +535,7 @@ const tools = [
     capabilities: ["team"],
     score: 88,
     tags: ["建站", "应用", "原型"],
-    scenarios: ["code"],
+    scenarios: ["code", "web-mvp"],
     description: "用自然语言生成全栈 Web 应用原型，适合快速验证产品想法。",
     bestFor: "MVP、后台页面、产品原型。",
     watchOut: "上线前需要工程化、安全和数据校验。",
@@ -545,7 +550,7 @@ const tools = [
     capabilities: ["team"],
     score: 86,
     tags: ["Web应用", "原型", "开发"],
-    scenarios: ["code"],
+    scenarios: ["code", "web-mvp"],
     description: "浏览器内构建和运行 Web 项目，适合从一句话生成可交互应用。",
     bestFor: "前端原型、演示 demo、快速试错。",
     watchOut: "复杂项目需要迁移到标准工程流程。",
@@ -560,7 +565,7 @@ const tools = [
     capabilities: ["team"],
     score: 86,
     tags: ["UI生成", "React", "Vercel"],
-    scenarios: ["code", "design"],
+    scenarios: ["code", "design", "web-mvp"],
     description: "根据提示词生成前端界面，适合 React 和产品 UI 草稿。",
     bestFor: "仪表盘、落地页、组件原型。",
     watchOut: "视觉一致性和可维护性需人工整理。",
@@ -730,6 +735,471 @@ const tools = [
     bestFor: "模型选型、开源项目发现、技术实验。",
     watchOut: "模型许可证、数据来源和安全风险要检查。",
   },
+  {
+    name: "Poe",
+    domain: "poe.com",
+    url: "https://poe.com",
+    category: "对话助手",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile"],
+    score: 88,
+    tags: ["多模型", "Bot", "移动端"],
+    scenarios: ["research", "paper", "code"],
+    description: "集合多种模型和机器人入口，适合在一个界面中比较不同模型回答。",
+    bestFor: "模型对比、轻量问答、移动端快速使用。",
+    watchOut: "不同模型能力和额度随套餐变化。",
+  },
+  {
+    name: "Microsoft Copilot",
+    domain: "copilot.microsoft.com",
+    url: "https://copilot.microsoft.com",
+    category: "对话助手",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile", "team"],
+    score: 89,
+    tags: ["微软", "搜索", "办公"],
+    scenarios: ["research", "slides", "resume"],
+    description: "微软生态里的 AI 助手，适合搜索、总结、办公草稿和浏览器内任务。",
+    bestFor: "Edge、Windows、Microsoft 365 用户。",
+    watchOut: "企业级能力通常依赖组织账号和授权。",
+  },
+  {
+    name: "You.com",
+    domain: "you.com",
+    url: "https://you.com",
+    category: "AI搜索",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile", "api"],
+    score: 85,
+    tags: ["搜索", "研究", "多模型"],
+    scenarios: ["research", "paper"],
+    description: "AI 搜索和多模型问答入口，适合快速查资料并获得带来源的摘要。",
+    bestFor: "英文资料搜索、竞品调研、主题初筛。",
+    watchOut: "结论仍需打开来源核对。",
+  },
+  {
+    name: "Consensus",
+    domain: "consensus.app",
+    url: "https://consensus.app",
+    category: "学术研究",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 87,
+    tags: ["论文", "证据", "学术搜索"],
+    scenarios: ["research", "paper"],
+    description: "面向研究问题的学术搜索工具，适合寻找论文证据和快速判断研究共识。",
+    bestFor: "文献综述、证据搜集、论文选题。",
+    watchOut: "学术结论要回到原文和研究方法复核。",
+  },
+  {
+    name: "Phind",
+    domain: "phind.com",
+    url: "https://www.phind.com",
+    category: "AI搜索",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile"],
+    score: 86,
+    tags: ["开发搜索", "代码", "引用"],
+    scenarios: ["code", "ai-coding", "research"],
+    description: "面向开发者的 AI 搜索和问答工具，适合查技术问题、库用法和报错原因。",
+    bestFor: "编程资料检索、技术方案比较。",
+    watchOut: "代码片段要结合项目版本和测试验证。",
+  },
+  {
+    name: "Grammarly",
+    domain: "grammarly.com",
+    url: "https://www.grammarly.com",
+    category: "写作办公",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 86,
+    tags: ["英文写作", "校对", "浏览器插件"],
+    scenarios: ["paper", "resume"],
+    description: "英文写作和语法校对工具，适合邮件、简历、论文初稿和商务文本润色。",
+    bestFor: "英文表达纠错、语气调整、简历润色。",
+    watchOut: "学术写作仍需保留作者自己的判断和引用规范。",
+  },
+  {
+    name: "QuillBot",
+    domain: "quillbot.com",
+    url: "https://quillbot.com",
+    category: "写作办公",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile"],
+    score: 84,
+    tags: ["改写", "摘要", "英文"],
+    scenarios: ["paper", "resume"],
+    description: "英文改写、摘要和语法辅助工具，适合把草稿整理成更清晰的表达。",
+    bestFor: "英文段落改写、摘要、简历措辞。",
+    watchOut: "论文场景要避免过度改写造成含义偏移。",
+  },
+  {
+    name: "Jasper",
+    domain: "jasper.ai",
+    url: "https://www.jasper.ai",
+    category: "写作办公",
+    price: "paid",
+    region: "海外",
+    capabilities: ["team"],
+    score: 82,
+    tags: ["营销文案", "品牌", "团队"],
+    scenarios: ["ecommerce", "resume"],
+    description: "面向营销团队的 AI 写作平台，适合品牌文案、广告草稿和内容日历。",
+    bestFor: "营销团队、品牌内容、广告创意。",
+    watchOut: "中文场景和行业事实需要人工校对。",
+  },
+  {
+    name: "WPS AI",
+    domain: "wps.cn",
+    url: "https://ai.wps.cn",
+    category: "写作办公",
+    price: "freemium",
+    region: "国内",
+    capabilities: ["team", "mobile"],
+    score: 85,
+    tags: ["办公", "文档", "中文"],
+    scenarios: ["slides", "paper", "resume"],
+    description: "嵌入 WPS 办公场景的 AI 助手，适合中文文档、表格和演示稿辅助。",
+    bestFor: "中文办公、PPT 初稿、文档总结。",
+    watchOut: "高级能力和模板权益要看会员规则。",
+  },
+  {
+    name: "飞书妙记",
+    domain: "feishu.cn",
+    url: "https://www.feishu.cn/product/minutes",
+    category: "写作办公",
+    price: "freemium",
+    region: "国内",
+    capabilities: ["team"],
+    score: 84,
+    tags: ["会议纪要", "转写", "团队"],
+    scenarios: ["research", "slides"],
+    description: "会议录音转写和纪要整理工具，适合团队会议、访谈和课程资料沉淀。",
+    bestFor: "会议纪要、访谈转写、知识沉淀。",
+    watchOut: "敏感会议音频要关注企业权限和数据边界。",
+  },
+  {
+    name: "Adobe Firefly",
+    domain: "adobe.com",
+    url: "https://www.adobe.com/products/firefly.html",
+    category: "图像设计",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 88,
+    tags: ["Adobe", "图片生成", "设计"],
+    scenarios: ["design", "ecommerce"],
+    description: "Adobe 的生成式创意工具，适合图片生成、视觉元素扩展和设计软件联动。",
+    bestFor: "品牌视觉、海报元素、创意素材。",
+    watchOut: "商用授权和生成额度需要按 Adobe 账号确认。",
+  },
+  {
+    name: "Leonardo AI",
+    domain: "leonardo.ai",
+    url: "https://leonardo.ai",
+    category: "图像设计",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 86,
+    tags: ["图片生成", "资产", "游戏美术"],
+    scenarios: ["design", "ecommerce"],
+    description: "图像和视觉资产生成平台，适合产品图、概念图和游戏美术风格探索。",
+    bestFor: "视觉资产、风格稿、产品创意图。",
+    watchOut: "模型风格和商用条款要按项目确认。",
+  },
+  {
+    name: "Ideogram",
+    domain: "ideogram.ai",
+    url: "https://ideogram.ai",
+    category: "图像设计",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile"],
+    score: 87,
+    tags: ["海报", "文字生成", "视觉"],
+    scenarios: ["design", "ecommerce"],
+    description: "擅长带文字的视觉生成，适合海报、标题图和品牌视觉实验。",
+    bestFor: "海报标题、社媒图、广告概念。",
+    watchOut: "中文文字和品牌字体仍需人工检查。",
+  },
+  {
+    name: "Krea AI",
+    domain: "krea.ai",
+    url: "https://www.krea.ai",
+    category: "图像设计",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 85,
+    tags: ["实时生成", "图片增强", "创意"],
+    scenarios: ["design", "ecommerce"],
+    description: "面向视觉探索和实时生成的创作工具，适合快速迭代图像方向。",
+    bestFor: "视觉草稿、图片增强、风格探索。",
+    watchOut: "最终交付素材要做清晰度和版权检查。",
+  },
+  {
+    name: "Pika",
+    domain: "pika.art",
+    url: "https://pika.art",
+    category: "视频创作",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["mobile"],
+    score: 86,
+    tags: ["文生视频", "图生视频", "短视频"],
+    scenarios: ["video"],
+    description: "AI 视频生成工具，适合用文字或图片快速生成短视频镜头。",
+    bestFor: "概念镜头、短视频素材、动态广告草稿。",
+    watchOut: "复杂叙事和稳定角色仍需要后期控制。",
+  },
+  {
+    name: "Luma AI",
+    domain: "lumalabs.ai",
+    url: "https://lumalabs.ai",
+    category: "视频创作",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["api"],
+    score: 88,
+    tags: ["视频生成", "3D", "Dream Machine"],
+    scenarios: ["video", "design"],
+    description: "视频与 3D 生成平台，适合高质感镜头、产品展示和视觉实验。",
+    bestFor: "镜头生成、产品短片、动态视觉。",
+    watchOut: "生成时长、清晰度和排队速度随套餐变化。",
+  },
+  {
+    name: "剪映",
+    domain: "capcut.cn",
+    url: "https://www.capcut.cn",
+    category: "视频创作",
+    price: "freemium",
+    region: "国内",
+    capabilities: ["mobile", "team"],
+    score: 89,
+    tags: ["剪辑", "字幕", "模板"],
+    scenarios: ["video", "ecommerce"],
+    description: "大众短视频剪辑工具，内置字幕、模板和 AI 辅助能力，适合快速出片。",
+    bestFor: "短视频剪辑、字幕、商品视频。",
+    watchOut: "模板素材商用和平台水印要看具体权益。",
+  },
+  {
+    name: "Descript",
+    domain: "descript.com",
+    url: "https://www.descript.com",
+    category: "视频创作",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 84,
+    tags: ["转写", "视频剪辑", "播客"],
+    scenarios: ["video", "resume"],
+    description: "基于文本编辑音视频的工具，适合播客、访谈、课程和口播剪辑。",
+    bestFor: "采访剪辑、字幕、口播内容。",
+    watchOut: "中文转写和声音功能要按素材测试。",
+  },
+  {
+    name: "Murf",
+    domain: "murf.ai",
+    url: "https://murf.ai",
+    category: "音频语音",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 83,
+    tags: ["配音", "TTS", "旁白"],
+    scenarios: ["video", "ecommerce"],
+    description: "AI 配音和旁白工具，适合课程、产品介绍、营销视频和演示讲解。",
+    bestFor: "英文旁白、课程配音、产品视频。",
+    watchOut: "声音授权和中文效果需要单独确认。",
+  },
+  {
+    name: "PlayHT",
+    domain: "play.ht",
+    url: "https://play.ht",
+    category: "音频语音",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["api"],
+    score: 84,
+    tags: ["TTS", "API", "克隆"],
+    scenarios: ["video", "automation"],
+    description: "语音生成和 TTS API 平台，适合把配音能力接入产品或内容流水线。",
+    bestFor: "语音 API、旁白自动化、多角色音频。",
+    watchOut: "声音克隆需要明确授权。",
+  },
+  {
+    name: "Windsurf",
+    domain: "windsurf.com",
+    url: "https://windsurf.com",
+    category: "编程开发",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 88,
+    tags: ["IDE", "Agent", "代码"],
+    scenarios: ["code", "ai-coding", "web-mvp"],
+    description: "AI 编程 IDE，适合在项目内理解上下文、生成修改和辅助调试。",
+    bestFor: "前端项目、全栈原型、跨文件开发。",
+    watchOut: "重要改动仍需代码审查和测试。",
+  },
+  {
+    name: "Replit",
+    domain: "replit.com",
+    url: "https://replit.com",
+    category: "编程开发",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 86,
+    tags: ["在线 IDE", "Agent", "部署"],
+    scenarios: ["code", "ai-coding", "web-mvp"],
+    description: "浏览器内编码、运行和部署项目的平台，适合学习、原型和轻量应用。",
+    bestFor: "在线开发、教学、快速 demo。",
+    watchOut: "生产级项目要关注资源、权限和部署边界。",
+  },
+  {
+    name: "Trae",
+    domain: "trae.ai",
+    url: "https://www.trae.ai",
+    category: "编程开发",
+    price: "free",
+    region: "国内",
+    capabilities: ["team"],
+    score: 85,
+    tags: ["IDE", "中文", "代码助手"],
+    scenarios: ["code", "ai-coding"],
+    description: "中文开发者友好的 AI IDE，适合代码理解、生成、重构和项目问答。",
+    bestFor: "中文开发场景、前端原型、代码解释。",
+    watchOut: "企业代码使用前要确认隐私和数据设置。",
+  },
+  {
+    name: "Qodo",
+    domain: "qodo.ai",
+    url: "https://www.qodo.ai",
+    category: "编程开发",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 84,
+    tags: ["测试", "代码质量", "PR"],
+    scenarios: ["code", "ai-coding"],
+    description: "面向代码质量、测试生成和 PR 审查的 AI 工具，适合工程团队提效。",
+    bestFor: "测试补齐、代码审查、质量门禁。",
+    watchOut: "生成测试仍需覆盖真实业务边界。",
+  },
+  {
+    name: "Flowise",
+    domain: "flowiseai.com",
+    url: "https://flowiseai.com",
+    category: "自动化智能体",
+    price: "free",
+    region: "海外",
+    capabilities: ["local", "api"],
+    score: 85,
+    tags: ["开源", "工作流", "RAG"],
+    scenarios: ["automation", "local"],
+    description: "开源低代码 AI 工作流构建工具，适合搭建聊天助手、RAG 和工具调用流程。",
+    bestFor: "RAG 原型、内部助手、低代码编排。",
+    watchOut: "自托管需要处理鉴权、日志和模型成本。",
+  },
+  {
+    name: "LangChain",
+    domain: "langchain.com",
+    url: "https://www.langchain.com",
+    category: "自动化智能体",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["api", "team", "local"],
+    score: 88,
+    tags: ["开发框架", "Agent", "RAG"],
+    scenarios: ["automation", "code", "local"],
+    description: "AI 应用开发框架和平台，适合构建 RAG、Agent、工具调用和评估流程。",
+    bestFor: "开发者构建 AI 应用和工作流。",
+    watchOut: "框架版本和依赖变化较快，要跟随官方文档。",
+  },
+  {
+    name: "AutoGen",
+    domain: "microsoft.github.io",
+    url: "https://microsoft.github.io/autogen/",
+    category: "自动化智能体",
+    price: "free",
+    region: "海外",
+    capabilities: ["local", "api"],
+    score: 84,
+    tags: ["多智能体", "开源", "微软"],
+    scenarios: ["automation", "code", "local"],
+    description: "微软开源的多智能体框架，适合研究和构建协作式 Agent 原型。",
+    bestFor: "多 Agent 实验、自动化研究、原型验证。",
+    watchOut: "生产落地需要额外设计权限、监控和失败恢复。",
+  },
+  {
+    name: "Stable Diffusion WebUI",
+    domain: "github.com",
+    url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+    category: "本地开源",
+    price: "free",
+    region: "海外",
+    capabilities: ["local"],
+    score: 86,
+    tags: ["图片生成", "开源", "本地部署"],
+    scenarios: ["local", "design"],
+    description: "经典本地图像生成 WebUI，适合体验 Stable Diffusion 生态和插件玩法。",
+    bestFor: "本地图片生成、模型实验、插件工作流。",
+    watchOut: "环境配置和模型来源需要谨慎管理。",
+  },
+  {
+    name: "Mistral Le Chat",
+    domain: "mistral.ai",
+    url: "https://chat.mistral.ai",
+    category: "对话助手",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["api", "team"],
+    score: 85,
+    tags: ["欧洲模型", "对话", "开发"],
+    scenarios: ["research", "code", "paper"],
+    description: "Mistral 的对话入口，适合体验其模型在写作、分析和开发任务中的表现。",
+    bestFor: "模型体验、英文分析、代码辅助。",
+    watchOut: "账号地区、模型可用性和额度可能变化。",
+  },
+  {
+    name: "Shopify Magic",
+    domain: "shopify.com",
+    url: "https://www.shopify.com/magic",
+    category: "写作办公",
+    price: "freemium",
+    region: "海外",
+    capabilities: ["team"],
+    score: 82,
+    tags: ["电商", "商品文案", "运营"],
+    scenarios: ["ecommerce"],
+    description: "面向 Shopify 商家的 AI 文案和运营辅助能力，适合商品描述和电商内容。",
+    bestFor: "商品文案、店铺运营、营销素材。",
+    watchOut: "更适合 Shopify 生态内用户。",
+  },
+  {
+    name: "美图设计室",
+    domain: "xiuxiu.meitu.com",
+    url: "https://xiuxiu.meitu.com",
+    category: "图像设计",
+    price: "freemium",
+    region: "国内",
+    capabilities: ["mobile"],
+    score: 83,
+    tags: ["修图", "电商", "中文"],
+    scenarios: ["design", "ecommerce"],
+    description: "中文图片处理和设计工具，适合商品图、人像、社媒图和电商素材处理。",
+    bestFor: "电商图、证件照、人像修图、运营配图。",
+    watchOut: "高级模板、批量能力和商用权益要看套餐。",
+  },
 ];
 
 const stacks = [
@@ -751,7 +1221,7 @@ const stacks = [
     title: "Web MVP",
     tools: ["v0", "Lovable", "Cursor"],
     category: "编程开发",
-    scenario: "code",
+    scenario: "web-mvp",
     note: "先出界面，再生成原型，最后进代码库收口。",
   },
   {
@@ -767,6 +1237,34 @@ const stacks = [
     category: "本地开源",
     scenario: "local",
     note: "本地模型加应用编排，适合私有知识库。",
+  },
+  {
+    title: "简历优化",
+    tools: ["ChatGPT", "Grammarly", "QuillBot"],
+    category: "写作办公",
+    scenario: "resume",
+    note: "先整理经历，再改英文表达，最后检查语气和格式。",
+  },
+  {
+    title: "PPT 生成",
+    tools: ["Gamma", "WPS AI", "AiPPT"],
+    category: "写作办公",
+    scenario: "slides",
+    note: "先生成大纲，再出页面初稿，最后按品牌风格微调。",
+  },
+  {
+    title: "AI 编程",
+    tools: ["Cursor", "Windsurf", "Qodo"],
+    category: "编程开发",
+    scenario: "ai-coding",
+    note: "一个负责编码，一个负责项目上下文，一个补质量和测试。",
+  },
+  {
+    title: "电商运营",
+    tools: ["美图设计室", "Shopify Magic", "剪映"],
+    category: "图像设计",
+    scenario: "ecommerce",
+    note: "商品图、详情文案和短视频一起打包，提高上新效率。",
   },
 ];
 
@@ -785,6 +1283,7 @@ const state = {
   ...defaultFilters,
   theme: getInitialTheme(),
   sidebarMode: getInitialSidebarMode(),
+  cardView: getInitialCardView(),
   mobileSidebarOpen: false,
   themeMenuOpen: false,
   favorites: readStoredSet("favorites"),
@@ -831,6 +1330,7 @@ const elements = {
   sidebarHideToggle: document.querySelector("#sidebarHideToggle"),
   sidebarReveal: document.querySelector("#sidebarReveal"),
   categoryRail: document.querySelector("#categoryRail"),
+  cardViewButtons: document.querySelectorAll("[data-card-view]"),
   template: document.querySelector("#toolCardTemplate"),
 };
 
@@ -875,6 +1375,11 @@ function getInitialTheme() {
 function getInitialSidebarMode() {
   const saved = readStoredValue("sidebar-mode", "full");
   return sidebarModes.includes(saved) ? saved : "full";
+}
+
+function getInitialCardView() {
+  const saved = readStoredValue("tool-card-view", "standard");
+  return cardViewModes.includes(saved) ? saved : "standard";
 }
 
 function favicon(domain) {
@@ -978,6 +1483,22 @@ function applySidebarMode(save = false) {
   elements.sidebarCompactToggle.title = state.sidebarMode === "compact" ? "展开完整侧栏" : "简化侧栏";
   elements.sidebarHideToggle.setAttribute("aria-pressed", String(state.sidebarMode === "hidden"));
   if (save) saveStoredValue("sidebar-mode", state.sidebarMode);
+}
+
+function applyCardView(save = false) {
+  elements.body.dataset.cardView = state.cardView;
+  elements.cardViewButtons.forEach((button) => {
+    const active = button.dataset.cardView === state.cardView;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  if (save) saveStoredValue("tool-card-view", state.cardView);
+}
+
+function setCardView(view) {
+  if (!cardViewModes.includes(view)) return;
+  state.cardView = view;
+  applyCardView(true);
 }
 
 function setSidebarMode(mode) {
@@ -1109,10 +1630,12 @@ function renderCard(tool) {
 
   const tags = node.querySelector(".tag-row");
   const priceClass = tool.price === "paid" ? "price-paid" : "price-free";
-  tags.append(createTag(priceLabel[tool.price], priceClass));
-  tags.append(createTag(tool.region));
-  tags.append(createTag(tool.category));
-  tool.tags.slice(0, 3).forEach((tag) => tags.append(createTag(tag)));
+  const tagItems = [priceLabel[tool.price], tool.region, tool.category, ...tool.tags];
+  const maxTags = state.cardView === "compact" ? 4 : 5;
+  tagItems.slice(0, maxTags).forEach((tag, index) => {
+    tags.append(createTag(tag, index === 0 ? priceClass : ""));
+  });
+  if (tagItems.length > maxTags) tags.append(createTag(`+${tagItems.length - maxTags}`));
 
   saveButton.classList.toggle("is-active", state.favorites.has(tool.name));
   saveButton.textContent = state.favorites.has(tool.name) ? "★" : "☆";
@@ -1405,6 +1928,9 @@ function bindEvents() {
   elements.sidebarCompactToggle.addEventListener("click", toggleCompactSidebar);
   elements.sidebarHideToggle.addEventListener("click", () => setSidebarMode("hidden"));
   elements.sidebarReveal.addEventListener("click", () => setSidebarMode("full"));
+  elements.cardViewButtons.forEach((button) => {
+    button.addEventListener("click", () => setCardView(button.dataset.cardView));
+  });
   elements.mobileSidebarOpen.addEventListener("click", () => setMobileSidebarOpen(true));
   elements.mobileSidebarClose.addEventListener("click", closeMobileSidebar);
   elements.sidebarOverlay.addEventListener("click", closeMobileSidebar);
@@ -1425,6 +1951,7 @@ function bindEvents() {
 function initUiState() {
   applyTheme();
   applySidebarMode(false);
+  applyCardView(false);
   setMobileSidebarOpen(false);
 }
 

@@ -115,7 +115,7 @@
               id="searchInput"
               type="search"
               aria-label="搜索 AI 工具、任务或关键词"
-              placeholder="搜索工具、任务、关键词，例如：论文、视频、代码、免费"
+              placeholder="搜索工具、任务或场景，例如：写论文、做PPT、Web MVP、AI编程"
               autocomplete="off"
             />
           </label>
@@ -221,13 +221,20 @@
                 <strong id="resultCount">0</strong>
                 <span id="resultLabel">个结果</span>
               </div>
-              <div class="sort-group">
-                <label for="sortSelect">排序</label>
-                <select id="sortSelect">
-                  <option value="score">AIark 推荐</option>
-                  <option value="name">名称 A-Z</option>
-                  <option value="price">免费优先</option>
-                </select>
+              <div class="results-controls">
+                <div class="view-toggle" aria-label="工具卡片视图">
+                  <span>视图</span>
+                  <button class="view-button is-active" type="button" data-card-view="standard" aria-pressed="true">标准</button>
+                  <button class="view-button" type="button" data-card-view="compact" aria-pressed="false">紧凑</button>
+                </div>
+                <div class="sort-group">
+                  <label for="sortSelect">排序</label>
+                  <select id="sortSelect">
+                    <option value="score">AIark 推荐</option>
+                    <option value="name">名称 A-Z</option>
+                    <option value="price">免费优先</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div id="toolGrid" class="tool-grid"></div>
