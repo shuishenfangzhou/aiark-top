@@ -8,7 +8,7 @@
       name="description"
       content="AIark.top 是任务驱动的 AI 工具导航，按写作、搜索、绘图、视频、编程、办公、自动化等场景快速筛选、收藏和对比 AI 工具。"
     />
-    <meta name="theme-color" content="#126b5f" />
+    <meta name="theme-color" content="#0b1117" />
     <meta property="og:title" content="AIark.top - AI 工具导航与任务清单" />
     <meta property="og:description" content="按任务找到可信、好用、可收藏、可对比的 AI 工具。" />
     <meta property="og:type" content="website" />
@@ -98,13 +98,16 @@
       <section class="workspace" id="directory">
         <div class="workspace-head">
           <div>
-            <p class="eyebrow">按任务找工具</p>
-            <h1><span>更快找到真正能用的</span><span>AI 工具</span></h1>
-            <p class="hero-copy">从真实工作任务出发，先筛选场景，再比较价格、可用地区、API、团队协作和本地部署能力。</p>
+            <p class="eyebrow">Minimal Agent Directory</p>
+            <h1><span>AI 工具库</span></h1>
+            <p class="hero-copy">按任务、工具名、场景搜索真正能用的 AI 工具。先确定要完成什么，再比较价格、地区、API、团队协作和本地部署能力。</p>
           </div>
           <div class="stats" aria-label="工具统计">
-            <span><strong id="toolCount">0</strong> 个工具</span>
-            <span><strong id="categoryCount">0</strong> 个场景</span>
+            <span><strong id="toolCount">76</strong> 个工具</span>
+            <span><strong id="categoryCount">10</strong> 类场景</span>
+            <span><strong>15</strong> 免费可用</span>
+            <span><strong>25</strong> 支持 API</span>
+            <span><strong>12</strong> 本地开源</span>
           </div>
         </div>
 
@@ -115,7 +118,7 @@
               id="searchInput"
               type="search"
               aria-label="搜索 AI 工具、任务或关键词"
-              placeholder="搜索工具、任务或场景，例如：写论文、做PPT、Web MVP、AI编程"
+              placeholder="例如：论文资料检索 / AI 编程 / 证件照修复"
               autocomplete="off"
             />
           </label>
@@ -165,9 +168,9 @@
           </div>
 
           <div class="insight-strip" aria-label="工具库概览">
-            <span><strong id="freeCount">0</strong> 免费可用</span>
-            <span><strong id="apiCount">0</strong> 支持 API</span>
-            <span><strong id="localCount">0</strong> 本地/开源</span>
+            <span><strong id="freeCount">15</strong> 免费可用</span>
+            <span><strong id="apiCount">25</strong> 支持 API</span>
+            <span><strong id="localCount">12</strong> 本地/开源</span>
             <span><strong id="savedCount">0</strong> 已收藏</span>
           </div>
         </div>
@@ -218,7 +221,7 @@
           <section class="results" aria-live="polite">
             <div class="results-head">
               <div>
-                <strong id="resultCount">0</strong>
+                <strong id="resultCount">76</strong>
                 <span id="resultLabel">个结果</span>
               </div>
               <div class="results-controls">
@@ -240,20 +243,20 @@
             <div id="toolGrid" class="tool-grid"></div>
             <div id="emptyState" class="empty-state" hidden>
               <strong>没有匹配结果</strong>
-              <span>换一个关键词，或减少筛选条件。</span>
+              <span>试试换一个关键词、减少筛选条件，或返回查看全部工具。</span>
               <button id="emptyReset" class="utility-button" type="button">重置筛选</button>
             </div>
           </section>
 
           <aside class="right-rail" aria-label="推荐组合">
             <section class="stack-box" id="stacks">
-              <h2 class="rail-title">今日工具组合</h2>
+              <h2 class="rail-title">推荐工作流</h2>
               <div id="stackList" class="stack-list"></div>
             </section>
 
             <section class="compare-box">
               <div class="compare-title">
-                <h2>对比栏 <small>最多 4 个</small></h2>
+                <h2>对比栏 <small id="compareCount">已选 0/4</small></h2>
                 <button id="clearCompare" class="text-button" type="button">清空</button>
               </div>
               <div id="compareList" class="compare-list"></div>
@@ -275,7 +278,7 @@
         <p class="eyebrow">AI Tools Directory</p>
         <h2 id="seoHeading">按任务选择 AI 工具，而不是只看榜单</h2>
         <p>
-          AIark.top 是一个面向中文用户的 AI 工具目录，收录对话助手、AI 搜索、写作办公、图像设计、视频创作、编程开发、自动化智能体、学术研究、本地开源和音频语音工具。每个工具都保留适合场景、价格线索、可用地区、API 或本地部署能力，以及使用前需要注意的风险。
+          AIark.top 是一个面向中文用户的 AI 工具目录，当前收录 76 个对话助手、AI 搜索、写作办公、图像设计、视频创作、编程开发、自动化智能体、学术研究、本地开源和音频语音工具。每个工具都保留适合场景、价格线索、可用地区、API 或本地部署能力，以及使用前需要注意的风险。
         </p>
         <div class="seo-grid">
           <article>

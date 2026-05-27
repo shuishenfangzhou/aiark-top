@@ -1317,6 +1317,7 @@ const elements = {
   emptyReset: document.querySelector("#emptyReset"),
   stackList: document.querySelector("#stackList"),
   compareList: document.querySelector("#compareList"),
+  compareCount: document.querySelector("#compareCount"),
   clearCompare: document.querySelector("#clearCompare"),
   themeToggle: document.querySelector("#themeToggle"),
   themeIcon: document.querySelector("#themeIcon"),
@@ -1435,7 +1436,7 @@ function applyTheme() {
   document.documentElement.dataset.theme = resolved;
 
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  if (themeColor) themeColor.content = resolved === "dark" ? "#101419" : "#126b5f";
+  if (themeColor) themeColor.content = resolved === "dark" ? "#0b1117" : "#0f766e";
 
   const label = { light: "浅色", dark: "深色", system: "跟随系统" }[state.theme];
   const icon = { light: "○", dark: "●", system: "◐" }[state.theme];
@@ -1772,6 +1773,7 @@ function applyStack(stack) {
 function renderCompare() {
   elements.compareList.innerHTML = "";
   const selected = tools.filter((tool) => state.compare.has(tool.name));
+  if (elements.compareCount) elements.compareCount.textContent = `已选 ${selected.length}/4`;
 
   if (!selected.length) {
     const empty = document.createElement("div");
