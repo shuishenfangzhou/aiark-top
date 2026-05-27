@@ -1284,6 +1284,7 @@ const state = {
   theme: getInitialTheme(),
   sidebarMode: getInitialSidebarMode(),
   cardView: getInitialCardView(),
+  advancedFiltersOpen: false,
   mobileSidebarOpen: false,
   themeMenuOpen: false,
   favorites: readStoredSet("favorites"),
@@ -1302,6 +1303,8 @@ const elements = {
   favoritesOnly: document.querySelector("#favoritesOnly"),
   resetFilters: document.querySelector("#resetFilters"),
   copyFilters: document.querySelector("#copyFilters"),
+  advancedFilters: document.querySelector("#advancedFilters"),
+  advancedFilterToggle: document.querySelector("#advancedFilterToggle"),
   activeFilters: document.querySelector("#activeFilters"),
   categoryButtons: document.querySelector("#categoryButtons"),
   toolGrid: document.querySelector("#toolGrid"),
@@ -1316,6 +1319,7 @@ const elements = {
   emptyState: document.querySelector("#emptyState"),
   emptyReset: document.querySelector("#emptyReset"),
   stackList: document.querySelector("#stackList"),
+  compareBox: document.querySelector("#compareBox"),
   compareList: document.querySelector("#compareList"),
   compareCount: document.querySelector("#compareCount"),
   clearCompare: document.querySelector("#clearCompare"),
@@ -1494,6 +1498,18 @@ function applyCardView(save = false) {
     button.setAttribute("aria-pressed", String(active));
   });
   if (save) saveStoredValue("tool-card-view", state.cardView);
+}
+
+function applyAdvancedFilters() {
+  elements.advancedFilters.hidden = !state.advancedFiltersOpen;
+  elements.advancedFilterToggle.classList.toggle("is-active", state.advancedFiltersOpen);
+  elements.advancedFilterToggle.setAttribute("aria-expanded", String(state.advancedFiltersOpen));
+  elements.advancedFilterToggle.textContent = state.advancedFiltersOpen ? "收起筛选" : "更多筛选";
+}
+
+function toggleAdvancedFilters() {
+  state.advancedFiltersOpen = !state.advancedFiltersOpen;
+  applyAdvancedFilters();
 }
 
 function setCardView(view) {
@@ -1774,6 +1790,8 @@ function renderCompare() {
   elements.compareList.innerHTML = "";
   const selected = tools.filter((tool) => state.compare.has(tool.name));
   if (elements.compareCount) elements.compareCount.textContent = `已选 ${selected.length}/4`;
+  elements.compareBox.classList.toggle("is-empty", selected.length === 0);
+  elements.clearCompare.hidden = selected.length === 0;
 
   if (!selected.length) {
     const empty = document.createElement("div");
@@ -1818,6 +1836,7 @@ function renderCompare() {
 
 function resetFilters() {
   Object.assign(state, defaultFilters);
+  state.advancedFiltersOpen = false;
   render();
 }
 
@@ -1872,6 +1891,7 @@ function render() {
   elements.savedCount.textContent = state.favorites.size;
 
   renderFilters();
+  applyAdvancedFilters();
   renderActiveFilters();
   renderStacks();
   renderCompare();
@@ -1915,6 +1935,7 @@ function bindEvents() {
   elements.resetFilters.addEventListener("click", resetFilters);
   elements.emptyReset.addEventListener("click", resetFilters);
   elements.copyFilters.addEventListener("click", copyFilterUrl);
+  elements.advancedFilterToggle.addEventListener("click", toggleAdvancedFilters);
   elements.clearCompare.addEventListener("click", () => {
     state.compare.clear();
     saveStoredSet("compare", state.compare);
@@ -1954,6 +1975,7 @@ function initUiState() {
   applyTheme();
   applySidebarMode(false);
   applyCardView(false);
+  applyAdvancedFilters();
   setMobileSidebarOpen(false);
 }
 
@@ -1973,6 +1995,11 @@ function initFilters() {
   if (scenarioValues.includes(params.get("scenario"))) state.scenario = params.get("scenario");
   if (sortValues.includes(params.get("sort"))) state.sort = params.get("sort");
   state.favoritesOnly = params.get("favorites") === "1";
+  state.advancedFiltersOpen =
+    state.category !== defaultFilters.category ||
+    state.price !== defaultFilters.price ||
+    state.region !== defaultFilters.region ||
+    state.capability !== defaultFilters.capability;
 }
 
 initUiState();

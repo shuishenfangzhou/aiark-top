@@ -127,44 +127,55 @@
 
           <div class="action-row" aria-label="常用操作">
             <button class="utility-button" id="favoritesOnly" type="button" aria-pressed="false">☆ 只看收藏</button>
+            <button
+              class="utility-button is-filter-toggle"
+              id="advancedFilterToggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="advancedFilters"
+            >
+              更多筛选
+            </button>
             <button class="utility-button" id="resetFilters" type="button">重置筛选</button>
             <button class="utility-button" id="copyFilters" type="button">复制筛选链接</button>
           </div>
 
           <div class="active-filters" id="activeFilters" aria-label="当前筛选" hidden></div>
 
-          <div class="filter-grid" aria-label="筛选器">
-            <label>
-              <span>分类</span>
-              <select id="categorySelect"></select>
-            </label>
-            <label>
-              <span>价格</span>
-              <select id="priceSelect">
-                <option value="all">全部</option>
-                <option value="free">免费可用</option>
-                <option value="freemium">免费增值</option>
-                <option value="paid">付费优先</option>
-              </select>
-            </label>
-            <label>
-              <span>地区</span>
-              <select id="regionSelect">
-                <option value="all">全部</option>
-                <option value="国内">国内可用</option>
-                <option value="海外">海外工具</option>
-              </select>
-            </label>
-            <label>
-              <span>能力</span>
-              <select id="capabilitySelect">
-                <option value="all">全部</option>
-                <option value="api">支持 API</option>
-                <option value="team">团队协作</option>
-                <option value="local">可本地/开源</option>
-                <option value="mobile">移动端友好</option>
-              </select>
-            </label>
+          <div class="advanced-filters" id="advancedFilters" hidden>
+            <div class="filter-grid" aria-label="筛选器">
+              <label>
+                <span>分类</span>
+                <select id="categorySelect"></select>
+              </label>
+              <label>
+                <span>价格</span>
+                <select id="priceSelect">
+                  <option value="all">全部</option>
+                  <option value="free">免费可用</option>
+                  <option value="freemium">免费增值</option>
+                  <option value="paid">付费优先</option>
+                </select>
+              </label>
+              <label>
+                <span>地区</span>
+                <select id="regionSelect">
+                  <option value="all">全部</option>
+                  <option value="国内">国内可用</option>
+                  <option value="海外">海外工具</option>
+                </select>
+              </label>
+              <label>
+                <span>能力</span>
+                <select id="capabilitySelect">
+                  <option value="all">全部</option>
+                  <option value="api">支持 API</option>
+                  <option value="team">团队协作</option>
+                  <option value="local">可本地/开源</option>
+                  <option value="mobile">移动端友好</option>
+                </select>
+              </label>
+            </div>
           </div>
 
           <div class="insight-strip" aria-label="工具库概览">
@@ -254,7 +265,7 @@
               <div id="stackList" class="stack-list"></div>
             </section>
 
-            <section class="compare-box">
+            <section class="compare-box is-empty" id="compareBox">
               <div class="compare-title">
                 <h2>对比栏 <small id="compareCount">已选 0/4</small></h2>
                 <button id="clearCompare" class="text-button" type="button">清空</button>

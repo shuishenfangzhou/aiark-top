@@ -59,6 +59,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -407,6 +411,14 @@ h2 {
   margin-top: 12px;
 }
 
+.advanced-filters {
+  margin-top: 14px;
+}
+
+.advanced-filters[hidden] {
+  display: none;
+}
+
 .filter-pill {
   min-height: 34px;
   padding: 0 11px;
@@ -467,7 +479,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 9px;
-  margin-top: 14px;
+  margin-top: 0;
 }
 
 .filter-grid label {
@@ -1019,6 +1031,40 @@ body[data-card-view="compact"] .visit-link {
   padding: 14px;
 }
 
+.compare-box {
+  position: fixed;
+  right: clamp(14px, 3vw, 40px);
+  bottom: 20px;
+  z-index: 19;
+  width: min(360px, calc(100vw - 28px));
+  max-height: min(62vh, 520px);
+  overflow: auto;
+  box-shadow: var(--shadow);
+}
+
+.compare-box.is-empty {
+  width: auto;
+  min-width: 170px;
+  max-height: none;
+  overflow: visible;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel), transparent 6%);
+}
+
+.compare-box.is-empty .compare-title {
+  margin-bottom: 0;
+}
+
+.compare-box.is-empty .compare-list {
+  display: none;
+}
+
+.compare-box.is-empty .compare-title h2 {
+  font-size: 13px;
+  line-height: 1;
+}
+
 .stack-list,
 .compare-list {
   display: grid;
@@ -1260,7 +1306,7 @@ body[data-card-view="compact"] .visit-link {
   .right-rail {
     grid-column: 1 / -1;
     position: static;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .stats {
@@ -1421,6 +1467,18 @@ body[data-card-view="compact"] .visit-link {
 
   .right-rail {
     grid-template-columns: 1fr;
+  }
+
+  .compare-box {
+    position: static;
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .compare-box.is-empty {
+    display: none;
   }
 
   .results-head {

@@ -34,6 +34,8 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 - Main search is the primary entry point and should appear before all filters.
 - The result grid should feel unframed; individual tool cards carry the structure.
 - On mobile, the left rail becomes a drawer and the right rail moves below results.
+- Detailed filters are collapsed by default. The first screen should show search, task chips, overview metrics, and a single "more filters" control.
+- The compare area should not consume a permanent column. Keep workflows in the right rail and expose compare as a light bottom-right dock on desktop.
 
 ## Components
 
@@ -43,6 +45,8 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 - Buttons: one primary visit action, one secondary compare action, same radius and height system.
 - Controls: filter selects, segmented view switch, utility buttons share the same pill language.
 - Empty state: provide recovery suggestions, not just “no results”.
+- Advanced filters: category, price, region, and capability live inside a collapsible region with `aria-expanded` on the trigger.
+- Compare dock: compact when empty, expanded only when tools are selected, always showing selected count.
 
 ## Motion
 
