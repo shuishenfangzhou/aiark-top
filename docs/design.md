@@ -36,12 +36,14 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 - On mobile, the left rail becomes a drawer and the right rail moves below results.
 - Detailed filters are collapsed by default. The first screen should show search, task chips, overview metrics, and a single "more filters" control.
 - The compare area should not consume a permanent column. Keep workflows in the right rail and expose compare as a light bottom-right dock on desktop.
+- The hero is a centered task console: one headline, one task input, then subdued metrics. Metrics support trust but should never compete with the search box.
 
 ## Components
 
 - Category nav: 40-44px rows, muted icon, weak count, active state with a 2px brand line and soft background.
 - Tool card: one panel only, no nested dark blocks. Name, domain, score, description, fit, caution, tags, compare, visit.
-- Tags: small pills, low contrast, max 5 visible.
+- Tool card on desktop: show summary by default; reveal fit, caution, compare, and visit actions on hover or keyboard focus. Keep the full information visible on touch devices.
+- Tags: small pills, low contrast, max 3-4 visible.
 - Buttons: one primary visit action, one secondary compare action, same radius and height system.
 - Controls: filter selects, segmented view switch, utility buttons share the same pill language.
 - Empty state: provide recovery suggestions, not just “no results”.
@@ -60,3 +62,9 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 - Never let static HTML show “0 tools” for the full directory state.
 - Homepage should include readable task/category/workflow text.
 - Build step generates category, tool, use-case pages and `sitemap.xml`.
+
+## Architecture Roadmap
+
+- Current production remains a static, build-generated site because it already gives crawlable homepage counts, category pages, tool pages, use-case pages, and sitemap output.
+- Next.js App Router migration should happen as a separate branch when product requirements need a real database, server actions, or authenticated submissions.
+- Preserve the same URL shape during migration: `/tools/[slug]`, `/categories/[slug]`, `/use-cases/[slug]`, `/sitemap.xml`, and `/robots.txt`.

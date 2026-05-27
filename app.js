@@ -1648,8 +1648,9 @@ function renderCard(tool) {
   const tags = node.querySelector(".tag-row");
   const priceClass = tool.price === "paid" ? "price-paid" : "price-free";
   const tagItems = [priceLabel[tool.price], tool.region, tool.category, ...tool.tags];
-  const maxTags = state.cardView === "compact" ? 4 : 5;
-  tagItems.slice(0, maxTags).forEach((tag, index) => {
+  const maxTags = state.cardView === "compact" ? 3 : 4;
+  const visibleTags = tagItems.length > maxTags ? tagItems.slice(0, maxTags - 1) : tagItems.slice(0, maxTags);
+  visibleTags.forEach((tag, index) => {
     tags.append(createTag(tag, index === 0 ? priceClass : ""));
   });
   if (tagItems.length > maxTags) tags.append(createTag(`+${tagItems.length - maxTags}`));
