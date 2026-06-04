@@ -6,7 +6,7 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 
 - 学习对象：大型 AI 工具导航站的分类宽度、更新密度、SEO 页面覆盖和工具数量。
 - AIark 差异：不只做“工具墙”，而是把工具组织成任务、工作流、筛选条件和可分享的选型清单。
-- 扩容目标：第一阶段从 76 个工具扩展到 217 个工具和 19 个分类；后续继续向 1000+ 工具库扩展。
+- 扩容目标：第一阶段从 76 个工具扩展到 217 个工具，第二阶段扩展到 641 个工具和 29 个分类；后续继续向 1000+ 工具库扩展。
 - 内容原则：工具名称和分类可以参考公开目录，但描述、适合场景、注意事项和工作流建议必须用 AIark 自己的选型语言重写。
 
 ## Aesthetic
@@ -36,7 +36,8 @@ AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI �
 
 ## Layout
 
-- Desktop uses a 1200px max-width container with three columns: light left navigation, primary tool grid, right workflow rail.
+- Desktop uses a 1480px max-width container with two browsing columns: a light left navigation rail and a wide primary results area.
+- Workflow recommendations should not consume a permanent right column because that makes the tool cards feel cramped.
 - Left rail width should stay between 220px and 240px in full mode.
 - Main search is the primary entry point and should appear before all filters.
 - The result grid should feel unframed; individual tool cards carry the structure.

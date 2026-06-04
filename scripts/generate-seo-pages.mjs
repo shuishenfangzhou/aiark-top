@@ -26,6 +26,16 @@ const categorySlugMap = new Map([
   ["数字人", "digital-human"],
   ["AI检测评测", "ai-detection-evaluation"],
   ["法律财税", "legal-finance"],
+  ["翻译出海", "translation-localization"],
+  ["办公会议", "office-meeting"],
+  ["知识库RAG", "knowledge-rag"],
+  ["3D游戏", "3d-game"],
+  ["浏览器插件", "browser-extension"],
+  ["医疗健康", "healthcare"],
+  ["金融投资", "finance-investment"],
+  ["内容运营", "content-operations"],
+  ["Logo品牌", "logo-brand"],
+  ["开发平台", "developer-platform"],
 ]);
 
 const scenarioSlugMap = new Map([
@@ -193,7 +203,16 @@ function scenarioSlug(scenario, used) {
 function writePage(filePath, html) {
   const target = path.join(root, filePath);
   fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, html, "utf8");
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      fs.writeFileSync(target, html, "utf8");
+      return;
+    } catch (error) {
+      const isTransient = ["UNKNOWN", "EBUSY", "EPERM"].includes(error.code);
+      if (!isTransient || attempt === 4) throw error;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 120 * (attempt + 1));
+    }
+  }
 }
 
 function clearGeneratedDirs() {
