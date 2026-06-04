@@ -17,6 +17,15 @@ const categorySlugMap = new Map([
   ["学术研究", "academic-research"],
   ["本地开源", "local-open-source"],
   ["音频语音", "audio-voice"],
+  ["模型平台", "model-platform"],
+  ["提示词资源", "prompt-resource"],
+  ["学习教育", "education"],
+  ["数据分析", "data-analysis"],
+  ["无代码建站", "no-code-website"],
+  ["营销电商", "marketing-ecommerce"],
+  ["数字人", "digital-human"],
+  ["AI检测评测", "ai-detection-evaluation"],
+  ["法律财税", "legal-finance"],
 ]);
 
 const scenarioSlugMap = new Map([
@@ -51,6 +60,9 @@ const toolSlugOverrides = new Map([
   ["Stable Diffusion WebUI", "stable-diffusion-webui"],
   ["Mistral Le Chat", "mistral-le-chat"],
   ["Shopify Magic", "shopify-magic"],
+  ["百度千帆", "baidu-qianfan"],
+  ["阿里百炼", "alibaba-bailian"],
+  ["腾讯混元", "tencent-hunyuan"],
 ]);
 
 function extractConst(name) {
@@ -99,17 +111,23 @@ function extractConst(name) {
 }
 
 function loadAppData() {
-  const code = [
-    extractConst("categories"),
-    extractConst("scenarios"),
-    extractConst("priceLabel"),
-    extractConst("capabilityLabel"),
-    extractConst("tools"),
-    extractConst("stacks"),
-    "JSON.stringify({ categories, scenarios, priceLabel, capabilityLabel, tools, stacks })",
-  ].join("\n");
+  const marker = "const defaultFilters =";
+  const end = source.indexOf(marker);
+  if (end < 0) throw new Error("Cannot find catalog boundary in app.js");
 
-  return JSON.parse(vm.runInNewContext(code, {}, { timeout: 1000 }));
+  const code = `${source.slice(0, end)}
+JSON.stringify({ categories, scenarios, priceLabel, capabilityLabel, tools, stacks })`;
+  const sandbox = {
+    window: {
+      matchMedia: () => ({
+        matches: false,
+        addEventListener() {},
+        removeEventListener() {},
+      }),
+    },
+  };
+
+  return JSON.parse(vm.runInNewContext(code, sandbox, { timeout: 1000 }));
 }
 
 function esc(value = "") {

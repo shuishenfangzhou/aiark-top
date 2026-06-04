@@ -2,47 +2,54 @@
 
 AIark 的界面定位从“AI 工具导航站”升级为“任务驱动的 AI 工具控制台”。设计目标是让用户先输入任务，再快速比较可用工具和工作流，而不是在厚重卡片墙里寻找入口。
 
+## Competitive Positioning
+
+- 学习对象：大型 AI 工具导航站的分类宽度、更新密度、SEO 页面覆盖和工具数量。
+- AIark 差异：不只做“工具墙”，而是把工具组织成任务、工作流、筛选条件和可分享的选型清单。
+- 扩容目标：第一阶段从 76 个工具扩展到 217 个工具和 19 个分类；后续继续向 1000+ 工具库扩展。
+- 内容原则：工具名称和分类可以参考公开目录，但描述、适合场景、注意事项和工作流建议必须用 AIark 自己的选型语言重写。
+
 ## Aesthetic
 
 - 方向：Minimal Agent Directory
-- 关键词：克制、低噪声、深色产品感、任务优先、信息摘要
-- 参考气质：Linear 的信息层级、Raycast 的工具入口、Vercel 的留白、Supabase 的低饱和绿色
+- 关键词：克制、低噪声、浅色 SaaS 产品感、任务优先、信息摘要
+- 参考气质：Linear 的信息层级、Raycast 的工具入口、Vercel 的留白、shadcn/ui 的组件秩序
 - 避免：霓虹发光、大色块按钮、卡片套卡片、过多边框、后台面板感
 
 ## Tokens
 
 ```css
---bg: #0b1117;
---panel: #101820;
---panel-soft: #141d26;
---border: rgba(148, 163, 184, 0.16);
---border-strong: rgba(148, 163, 184, 0.28);
---text: #e5e7eb;
---text-muted: #94a3b8;
---text-soft: #64748b;
---brand: #2dd4bf;
---brand-muted: rgba(45, 212, 191, 0.12);
---brand-border: rgba(45, 212, 191, 0.32);
---radius-card: 18px;
+--bg: #f7f8fa;
+--panel: #ffffff;
+--panel-soft: #f3f4f6;
+--border: #e5e7eb;
+--border-strong: #c7d2fe;
+--text: #111827;
+--text-muted: #6b7280;
+--text-soft: #9ca3af;
+--brand: #4f46e5;
+--brand-muted: #eef2ff;
+--brand-border: #c7d2fe;
+--radius-card: 20px;
 --radius-control: 12px;
 ```
 
 ## Layout
 
-- Desktop uses three columns: light left navigation, primary tool grid, right workflow/compare rail.
+- Desktop uses a 1200px max-width container with three columns: light left navigation, primary tool grid, right workflow rail.
 - Left rail width should stay between 220px and 240px in full mode.
 - Main search is the primary entry point and should appear before all filters.
 - The result grid should feel unframed; individual tool cards carry the structure.
 - On mobile, the left rail becomes a drawer and the right rail moves below results.
 - Detailed filters are collapsed by default. The first screen should show search, task chips, overview metrics, and a single "more filters" control.
 - The compare area should not consume a permanent column. Keep workflows in the right rail and expose compare as a light bottom-right dock on desktop.
-- The hero is a centered task console: one headline, one task input, then subdued metrics. Metrics support trust but should never compete with the search box.
+- The hero is a two-column task story: clear positioning on the left, a restrained "task input to tool chain" mock console on the right, then the real search panel below.
 
 ## Components
 
 - Category nav: 40-44px rows, muted icon, weak count, active state with a 2px brand line and soft background.
 - Tool card: one panel only, no nested dark blocks. Name, domain, score, description, fit, caution, tags, compare, visit.
-- Tool card on desktop: show summary by default; reveal fit, caution, compare, and visit actions on hover or keyboard focus. Keep the full information visible on touch devices.
+- Tool card: show summary, fit, caution, compare, and visit actions by default so users can scan and compare quickly.
 - Tags: small pills, low contrast, max 3-4 visible.
 - Buttons: one primary visit action, one secondary compare action, same radius and height system.
 - Controls: filter selects, segmented view switch, utility buttons share the same pill language.

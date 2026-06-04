@@ -10,6 +10,15 @@ const categories = [
   "学术研究",
   "本地开源",
   "音频语音",
+  "模型平台",
+  "提示词资源",
+  "学习教育",
+  "数据分析",
+  "无代码建站",
+  "营销电商",
+  "数字人",
+  "AI检测评测",
+  "法律财税",
 ];
 
 const scenarios = [
@@ -52,6 +61,15 @@ const categoryMeta = {
   学术研究: { icon: "研", label: "学术研究" },
   本地开源: { icon: "本", label: "本地开源" },
   音频语音: { icon: "音", label: "音频语音" },
+  模型平台: { icon: "模", label: "模型平台" },
+  提示词资源: { icon: "提", label: "提示词资源" },
+  学习教育: { icon: "学", label: "学习教育" },
+  数据分析: { icon: "数", label: "数据分析" },
+  无代码建站: { icon: "站", label: "无代码建站" },
+  营销电商: { icon: "营", label: "营销电商" },
+  数字人: { icon: "人", label: "数字人" },
+  AI检测评测: { icon: "测", label: "AI检测评测" },
+  法律财税: { icon: "法", label: "法律财税" },
 };
 
 const themeModes = ["light", "dark", "system"];
@@ -59,7 +77,31 @@ const sidebarModes = ["full", "compact", "hidden"];
 const cardViewModes = ["standard", "compact"];
 const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-const tools = [
+function scenarioLabel(value) {
+  return scenarios.find((scenario) => scenario.value === value)?.label || value;
+}
+
+function createSeedTool([name, domain, category, price, region, capabilities, scenarios, score, tags = [], url]) {
+  const taskText = scenarios.map(scenarioLabel).join("、") || category;
+  const focusText = tags.slice(0, 3).join("、");
+  return {
+    name,
+    domain,
+    url: url || `https://${domain}`,
+    category,
+    price,
+    region,
+    capabilities,
+    score,
+    tags,
+    scenarios,
+    description: `${name} 是 ${category} 方向的 AI 工具，适合${taskText}等任务${focusText ? `，侧重${focusText}` : ""}。`,
+    bestFor: `${taskText}任务的备选方案和工具组合补充。`,
+    watchOut: "价格、可用地区、数据合规和商用权益请以官网最新说明为准。",
+  };
+}
+
+const coreTools = [
   {
     name: "ChatGPT",
     domain: "chatgpt.com",
@@ -1202,6 +1244,152 @@ const tools = [
   },
 ];
 
+const toolSeedRows = [
+  ["Writesonic", "writesonic.com", "写作办公", "freemium", "海外", ["api", "team"], ["paper", "ecommerce"], 84, ["营销文案", "博客", "SEO"]],
+  ["Copy.ai", "copy.ai", "写作办公", "freemium", "海外", ["team"], ["ecommerce", "slides"], 82, ["销售文案", "工作流", "品牌"]],
+  ["Rytr", "rytr.me", "写作办公", "freemium", "海外", ["team"], ["paper", "ecommerce"], 78, ["短文案", "模板", "多语言"]],
+  ["Sudowrite", "sudowrite.com", "写作办公", "paid", "海外", ["team"], ["paper"], 79, ["创意写作", "小说", "改写"]],
+  ["Wordtune", "wordtune.com", "写作办公", "freemium", "海外", ["mobile"], ["paper", "resume"], 80, ["改写", "英文", "润色"]],
+  ["ProWritingAid", "prowritingaid.com", "写作办公", "freemium", "海外", ["team"], ["paper", "resume"], 79, ["语法", "长文", "编辑"]],
+  ["Lex", "lex.page", "写作办公", "freemium", "海外", ["team"], ["paper"], 76, ["写作编辑器", "协作", "草稿"]],
+  ["Tome", "tome.app", "写作办公", "freemium", "海外", ["team"], ["slides"], 78, ["演示", "故事板", "排版"]],
+  ["Beautiful.ai", "beautiful.ai", "写作办公", "freemium", "海外", ["team"], ["slides"], 79, ["PPT", "模板", "团队"]],
+  ["Genspark", "genspark.ai", "AI搜索", "freemium", "海外", ["mobile"], ["research"], 86, ["AI搜索", "页面生成", "研究"]],
+  ["Komo", "komo.ai", "AI搜索", "freemium", "海外", ["mobile"], ["research"], 80, ["搜索", "问答", "发现"]],
+  ["Exa", "exa.ai", "AI搜索", "freemium", "海外", ["api"], ["research", "code"], 84, ["搜索API", "RAG", "开发"]],
+  ["Brave Leo", "brave.com", "AI搜索", "freemium", "海外", ["mobile"], ["research"], 78, ["浏览器", "搜索", "隐私"], "https://brave.com/leo"],
+  ["Andi", "andisearch.com", "AI搜索", "free", "海外", ["mobile"], ["research"], 75, ["搜索", "摘要", "问答"]],
+  ["DALL-E", "openai.com", "图像设计", "paid", "海外", ["api"], ["design"], 87, ["图像生成", "OpenAI", "创意"], "https://openai.com/dall-e"],
+  ["Recraft", "recraft.ai", "图像设计", "freemium", "海外", ["team"], ["design"], 84, ["矢量", "品牌", "设计"]],
+  ["Freepik AI", "freepik.com/ai", "图像设计", "freemium", "海外", ["team"], ["design", "ecommerce"], 81, ["素材", "图片", "模板"]],
+  ["Playground AI", "playground.com", "图像设计", "freemium", "海外", ["team"], ["design"], 80, ["图像生成", "编辑", "创作"]],
+  ["Clipdrop", "clipdrop.co", "图像设计", "freemium", "海外", ["api"], ["design", "ecommerce"], 78, ["抠图", "增强", "编辑"]],
+  ["Magnific AI", "magnific.ai", "图像设计", "paid", "海外", ["team"], ["design", "ecommerce"], 79, ["放大", "增强", "质感"]],
+  ["remove.bg", "remove.bg", "图像设计", "freemium", "海外", ["api"], ["design", "ecommerce"], 78, ["抠图", "API", "商品图"]],
+  ["Photoroom", "photoroom.com", "图像设计", "freemium", "海外", ["api", "mobile"], ["design", "ecommerce"], 83, ["商品图", "抠图", "电商"]],
+  ["Pebblely", "pebblely.com", "图像设计", "freemium", "海外", ["team"], ["design", "ecommerce"], 77, ["商品图", "背景", "电商"]],
+  ["Looka", "looka.com", "图像设计", "freemium", "海外", ["team"], ["design"], 75, ["Logo", "品牌", "模板"]],
+  ["Uizard", "uizard.io", "图像设计", "freemium", "海外", ["team"], ["web-mvp", "design"], 80, ["UI", "原型", "设计"]],
+  ["Sora", "openai.com", "视频创作", "paid", "海外", ["team"], ["video"], 90, ["文生视频", "OpenAI", "镜头"], "https://openai.com/sora"],
+  ["Synthesia", "synthesia.io", "数字人", "paid", "海外", ["team"], ["video", "slides"], 84, ["数字人", "培训", "口播"]],
+  ["Colossyan", "colossyan.com", "数字人", "paid", "海外", ["team"], ["video", "slides"], 78, ["数字人", "培训", "企业"]],
+  ["InVideo AI", "invideo.io", "视频创作", "freemium", "海外", ["team"], ["video", "ecommerce"], 80, ["短视频", "模板", "营销"]],
+  ["VEED", "veed.io", "视频创作", "freemium", "海外", ["team"], ["video"], 82, ["剪辑", "字幕", "录屏"]],
+  ["Kapwing", "kapwing.com", "视频创作", "freemium", "海外", ["team"], ["video"], 80, ["在线剪辑", "字幕", "社媒"]],
+  ["OpusClip", "opus.pro", "视频创作", "freemium", "海外", ["team"], ["video", "ecommerce"], 82, ["切片", "短视频", "口播"]],
+  ["Fliki", "fliki.ai", "视频创作", "freemium", "海外", ["team"], ["video"], 79, ["文字转视频", "配音", "模板"]],
+  ["Hailuo AI", "hailuoai.video", "视频创作", "freemium", "国内", ["mobile"], ["video"], 83, ["文生视频", "中文", "镜头"]],
+  ["PixVerse", "pixverse.ai", "视频创作", "freemium", "海外", ["mobile"], ["video"], 82, ["文生视频", "动效", "创意"]],
+  ["Viggle", "viggle.ai", "视频创作", "freemium", "海外", ["mobile"], ["video"], 79, ["动作驱动", "角色", "短视频"]],
+  ["Haiper", "haiper.ai", "视频创作", "freemium", "海外", ["mobile"], ["video"], 77, ["视频生成", "创意", "社媒"]],
+  ["Udio", "udio.com", "音频语音", "freemium", "海外", ["mobile"], ["video"], 83, ["音乐生成", "歌曲", "创作"]],
+  ["Stable Audio", "stableaudio.com", "音频语音", "freemium", "海外", ["api"], ["video"], 80, ["音乐", "音效", "生成"]],
+  ["Riffusion", "riffusion.com", "音频语音", "free", "海外", ["mobile"], ["video"], 76, ["音乐生成", "实验", "创作"]],
+  ["LALAL.AI", "lalal.ai", "音频语音", "freemium", "海外", ["api"], ["video"], 79, ["人声分离", "音频处理", "创作"]],
+  ["Krisp", "krisp.ai", "音频语音", "freemium", "海外", ["team"], ["video"], 79, ["降噪", "会议", "语音"]],
+  ["Adobe Podcast", "podcast.adobe.com", "音频语音", "freemium", "海外", ["team"], ["video"], 81, ["语音增强", "播客", "录音"]],
+  ["Otter.ai", "otter.ai", "音频语音", "freemium", "海外", ["team"], ["research", "slides"], 80, ["会议纪要", "转写", "协作"]],
+  ["Fireflies.ai", "fireflies.ai", "音频语音", "freemium", "海外", ["api", "team"], ["research", "slides"], 82, ["会议纪要", "销售", "自动化"]],
+  ["Tabnine", "tabnine.com", "编程开发", "freemium", "海外", ["team"], ["code", "ai-coding"], 80, ["代码补全", "IDE", "企业"]],
+  ["Codeium", "codeium.com", "编程开发", "freemium", "海外", ["team"], ["code", "ai-coding"], 83, ["代码补全", "IDE", "免费"]],
+  ["Sourcegraph Cody", "sourcegraph.com", "编程开发", "freemium", "海外", ["team"], ["code", "ai-coding"], 82, ["代码搜索", "上下文", "企业"], "https://sourcegraph.com/cody"],
+  ["Continue", "continue.dev", "编程开发", "free", "海外", ["local"], ["code", "ai-coding", "local"], 82, ["开源", "IDE", "本地模型"]],
+  ["CodeRabbit", "coderabbit.ai", "编程开发", "freemium", "海外", ["team"], ["code", "ai-coding"], 82, ["代码审查", "PR", "质量"]],
+  ["Sweep", "sweep.dev", "编程开发", "freemium", "海外", ["team"], ["code", "automation"], 76, ["Issue", "代码修改", "自动化"]],
+  ["Devin", "devin.ai", "自动化智能体", "paid", "海外", ["team"], ["code", "automation", "ai-coding"], 86, ["软件工程", "Agent", "任务执行"]],
+  ["Warp", "warp.dev", "编程开发", "freemium", "海外", ["team"], ["code", "automation"], 80, ["终端", "Agent", "开发"]],
+  ["Aider", "aider.chat", "编程开发", "free", "海外", ["local"], ["code", "ai-coding", "local"], 81, ["命令行", "开源", "结对编程"]],
+  ["CrewAI", "crewai.com", "自动化智能体", "freemium", "海外", ["api"], ["automation", "code"], 83, ["多智能体", "框架", "工作流"]],
+  ["AutoGPT", "agpt.co", "自动化智能体", "free", "海外", ["local"], ["automation", "local"], 78, ["开源Agent", "自动化", "实验"]],
+  ["AgentGPT", "agentgpt.reworkd.ai", "自动化智能体", "freemium", "海外", ["mobile"], ["automation"], 75, ["浏览器Agent", "任务", "实验"]],
+  ["LangGraph", "langchain.com", "自动化智能体", "freemium", "海外", ["api"], ["automation", "code"], 85, ["Agent框架", "状态机", "开发"], "https://langchain.com/langgraph"],
+  ["AutoGen Studio", "microsoft.github.io", "自动化智能体", "free", "海外", ["local"], ["automation", "code"], 80, ["多智能体", "微软", "开源"], "https://microsoft.github.io/autogen"],
+  ["SuperAGI", "superagi.com", "自动化智能体", "freemium", "海外", ["team"], ["automation"], 76, ["Agent平台", "工作流", "开源"]],
+  ["Taskade AI", "taskade.com", "自动化智能体", "freemium", "海外", ["mobile", "team"], ["automation", "slides"], 78, ["任务管理", "团队", "Agent"]],
+  ["Gumloop", "gumloop.com", "自动化智能体", "freemium", "海外", ["team"], ["automation", "ecommerce"], 80, ["无代码自动化", "数据流", "运营"]],
+  ["MindStudio", "mindstudio.ai", "自动化智能体", "freemium", "海外", ["team"], ["automation"], 79, ["AI应用", "Agent", "无代码"]],
+  ["Manus", "manus.im", "自动化智能体", "freemium", "海外", ["mobile"], ["automation", "research"], 84, ["通用Agent", "任务执行", "研究"]],
+  ["Jan", "jan.ai", "本地开源", "free", "海外", ["local"], ["local"], 82, ["本地模型", "桌面端", "开源"]],
+  ["Open WebUI", "openwebui.com", "本地开源", "free", "海外", ["local", "team"], ["local"], 84, ["本地界面", "Ollama", "私有部署"]],
+  ["AnythingLLM", "anythingllm.com", "本地开源", "freemium", "海外", ["local", "team"], ["local", "research"], 82, ["知识库", "RAG", "私有部署"]],
+  ["GPT4All", "gpt4all.io", "本地开源", "free", "海外", ["local"], ["local"], 79, ["本地模型", "桌面端", "开源"]],
+  ["PrivateGPT", "privategpt.dev", "本地开源", "free", "海外", ["local"], ["local", "research"], 78, ["私有知识库", "RAG", "开源"]],
+  ["KoboldCpp", "github.com", "本地开源", "free", "海外", ["local"], ["local"], 75, ["推理", "本地", "开源"], "https://github.com/LostRuins/koboldcpp"],
+  ["LMDeploy", "lmdeploy.readthedocs.io", "本地开源", "free", "国内", ["local", "api"], ["local", "code"], 79, ["推理部署", "模型服务", "开源"]],
+  ["vLLM", "vllm.ai", "本地开源", "free", "海外", ["local", "api"], ["local", "code"], 85, ["推理加速", "服务化", "开源"]],
+  ["llama.cpp", "github.com", "本地开源", "free", "海外", ["local"], ["local"], 86, ["本地推理", "轻量", "开源"], "https://github.com/ggerganov/llama.cpp"],
+  ["OpenAI Platform", "platform.openai.com", "模型平台", "paid", "海外", ["api", "team"], ["code", "automation"], 92, ["API", "多模态", "开发"]],
+  ["Anthropic Console", "console.anthropic.com", "模型平台", "paid", "海外", ["api", "team"], ["code", "paper"], 90, ["Claude API", "长上下文", "开发"]],
+  ["Google AI Studio", "aistudio.google.com", "模型平台", "freemium", "海外", ["api"], ["code", "research"], 88, ["Gemini", "API", "原型"]],
+  ["GroqCloud", "console.groq.com", "模型平台", "freemium", "海外", ["api"], ["code", "automation"], 85, ["高速推理", "API", "开发"]],
+  ["Together AI", "together.ai", "模型平台", "paid", "海外", ["api", "team"], ["code", "local"], 84, ["开源模型", "API", "训练"]],
+  ["Replicate", "replicate.com", "模型平台", "paid", "海外", ["api"], ["code", "design", "video"], 83, ["模型托管", "API", "原型"]],
+  ["Modal", "modal.com", "模型平台", "paid", "海外", ["api", "team"], ["code", "local"], 82, ["云函数", "GPU", "部署"]],
+  ["Fireworks AI", "fireworks.ai", "模型平台", "paid", "海外", ["api", "team"], ["code", "automation"], 82, ["推理API", "开源模型", "企业"]],
+  ["OpenRouter", "openrouter.ai", "模型平台", "freemium", "海外", ["api"], ["code", "automation"], 84, ["模型路由", "API", "多模型"]],
+  ["Cohere", "cohere.com", "模型平台", "paid", "海外", ["api", "team"], ["research", "code"], 80, ["企业AI", "RAG", "嵌入"]],
+  ["Mistral AI Platform", "console.mistral.ai", "模型平台", "paid", "海外", ["api"], ["code", "research"], 84, ["模型API", "欧洲", "开源"]],
+  ["Azure AI Studio", "ai.azure.com", "模型平台", "paid", "海外", ["api", "team"], ["code", "automation"], 84, ["企业云", "模型", "开发"]],
+  ["SiliconFlow", "siliconflow.cn", "模型平台", "freemium", "国内", ["api"], ["code", "automation"], 82, ["模型API", "中文", "推理"]],
+  ["ModelScope", "modelscope.cn", "模型平台", "free", "国内", ["api", "local"], ["local", "code"], 81, ["模型社区", "开源", "中文"]],
+  ["百度千帆", "cloud.baidu.com", "模型平台", "paid", "国内", ["api", "team"], ["code", "automation"], 80, ["模型平台", "企业", "中文"], "https://cloud.baidu.com/product/wenxinworkshop"],
+  ["阿里百炼", "bailian.console.aliyun.com", "模型平台", "paid", "国内", ["api", "team"], ["code", "automation"], 82, ["模型平台", "企业", "中文"]],
+  ["腾讯混元", "hunyuan.tencent.com", "模型平台", "paid", "国内", ["api", "team"], ["code", "automation"], 80, ["模型API", "企业", "中文"]],
+  ["PromptHero", "prompthero.com", "提示词资源", "freemium", "海外", ["mobile"], ["design", "video"], 78, ["提示词", "图像", "案例"]],
+  ["FlowGPT", "flowgpt.com", "提示词资源", "freemium", "海外", ["mobile"], ["research", "automation"], 78, ["提示词", "社区", "Agent"]],
+  ["AIPRM", "aiprm.com", "提示词资源", "freemium", "海外", ["team"], ["research", "ecommerce"], 77, ["提示词", "浏览器", "营销"]],
+  ["SnackPrompt", "snackprompt.com", "提示词资源", "free", "海外", ["mobile"], ["research", "slides"], 72, ["提示词", "社区", "案例"]],
+  ["OpenPrompt", "openprompt.co", "提示词资源", "free", "海外", ["mobile"], ["research", "code"], 70, ["提示词", "学习", "模板"]],
+  ["Khanmigo", "khanacademy.org", "学习教育", "paid", "海外", ["mobile"], ["research"], 82, ["学习助手", "数学", "教育"], "https://khanacademy.org/khan-labs"],
+  ["Duolingo Max", "duolingo.com/max", "学习教育", "paid", "海外", ["mobile"], ["research"], 79, ["语言学习", "对话", "移动端"]],
+  ["Quizlet Q-Chat", "quizlet.com", "学习教育", "freemium", "海外", ["mobile"], ["research"], 76, ["卡片", "学习", "问答"]],
+  ["Socratic", "socratic.org", "学习教育", "free", "海外", ["mobile"], ["research"], 74, ["作业", "拍照", "解释"]],
+  ["Explainpaper", "explainpaper.com", "学习教育", "freemium", "海外", ["mobile"], ["paper"], 77, ["论文解释", "学习", "阅读"]],
+  ["Julius AI", "julius.ai", "数据分析", "freemium", "海外", ["team"], ["research", "ecommerce"], 82, ["数据分析", "图表", "问数"]],
+  ["Rows AI", "rows.com", "数据分析", "freemium", "海外", ["team"], ["research", "ecommerce"], 78, ["表格", "自动化", "数据"], "https://rows.com/ai"],
+  ["ChatCSV", "chatcsv.co", "数据分析", "freemium", "海外", ["mobile"], ["research"], 74, ["CSV", "问答", "可视化"]],
+  ["Akkio", "akkio.com", "数据分析", "paid", "海外", ["team"], ["research", "ecommerce"], 78, ["预测", "无代码", "数据"]],
+  ["Obviously AI", "obviously.ai", "数据分析", "paid", "海外", ["team"], ["research", "ecommerce"], 76, ["预测分析", "无代码", "商业"]],
+  ["Polymer", "polymersearch.com", "数据分析", "freemium", "海外", ["team"], ["research", "ecommerce"], 75, ["BI", "仪表盘", "数据"]],
+  ["Tableau Pulse", "tableau.com", "数据分析", "paid", "海外", ["team"], ["research"], 80, ["BI", "企业", "洞察"], "https://tableau.com/products/tableau-pulse"],
+  ["Power BI Copilot", "powerbi.microsoft.com", "数据分析", "paid", "海外", ["team"], ["research"], 82, ["BI", "微软", "企业"]],
+  ["Framer AI", "framer.com", "无代码建站", "freemium", "海外", ["team"], ["web-mvp", "design"], 82, ["网站", "设计", "发布"], "https://framer.com/ai"],
+  ["Webflow AI", "webflow.com", "无代码建站", "paid", "海外", ["team"], ["web-mvp", "design"], 82, ["网站", "CMS", "设计"], "https://webflow.com/ai"],
+  ["Durable", "durable.co", "无代码建站", "paid", "海外", ["team"], ["web-mvp", "ecommerce"], 78, ["快速建站", "小企业", "模板"]],
+  ["Wix ADI", "wix.com", "无代码建站", "freemium", "海外", ["team"], ["web-mvp", "ecommerce"], 76, ["建站", "模板", "营销"]],
+  ["Relume", "relume.io", "无代码建站", "freemium", "海外", ["team"], ["web-mvp", "design"], 80, ["网站地图", "线框", "Webflow"]],
+  ["TeleportHQ", "teleporthq.io", "无代码建站", "freemium", "海外", ["team"], ["web-mvp", "code"], 74, ["低代码", "前端", "导出"]],
+  ["Dora AI", "dora.run", "无代码建站", "freemium", "海外", ["team"], ["web-mvp", "design"], 78, ["3D网站", "动效", "建站"], "https://dora.run/ai"],
+  ["AdCreative.ai", "adcreative.ai", "营销电商", "paid", "海外", ["team"], ["ecommerce", "design"], 80, ["广告素材", "投放", "品牌"]],
+  ["Ocoya", "ocoya.com", "营销电商", "freemium", "海外", ["team"], ["ecommerce", "video"], 76, ["社媒", "排期", "文案"]],
+  ["Predis.ai", "predis.ai", "营销电商", "freemium", "海外", ["team"], ["ecommerce", "video"], 77, ["社媒内容", "广告", "短视频"]],
+  ["Mokker AI", "mokker.ai", "营销电商", "freemium", "海外", ["team"], ["ecommerce", "design"], 76, ["商品图", "背景", "电商"]],
+  ["Flair.ai", "flair.ai", "营销电商", "freemium", "海外", ["team"], ["ecommerce", "design"], 78, ["商品摄影", "广告图", "品牌"]],
+  ["Sellesta", "sellesta.com", "营销电商", "paid", "海外", ["team"], ["ecommerce"], 73, ["亚马逊", "Listing", "优化"]],
+  ["Creatify", "creatify.ai", "营销电商", "paid", "海外", ["team"], ["ecommerce", "video"], 78, ["广告视频", "商品", "营销"]],
+  ["Arcads", "arcads.ai", "营销电商", "paid", "海外", ["team"], ["ecommerce", "video"], 77, ["广告视频", "虚拟演员", "营销"]],
+  ["D-ID", "d-id.com", "数字人", "paid", "海外", ["api", "team"], ["video"], 80, ["数字人", "API", "口播"]],
+  ["Hour One", "hourone.ai", "数字人", "paid", "海外", ["team"], ["video", "slides"], 78, ["数字人", "培训", "企业"]],
+  ["Akool", "akool.com", "数字人", "freemium", "海外", ["api", "team"], ["video", "ecommerce"], 79, ["换脸", "数字人", "营销"]],
+  ["Elai", "elai.io", "数字人", "paid", "海外", ["team"], ["video", "slides"], 76, ["数字人", "培训", "演示"]],
+  ["Yepic AI", "yepic.ai", "数字人", "paid", "海外", ["team"], ["video"], 74, ["数字人", "翻译", "口播"]],
+  ["Originality.ai", "originality.ai", "AI检测评测", "paid", "海外", ["team"], ["paper"], 78, ["AI检测", "抄袭", "内容"]],
+  ["GPTZero", "gptzero.me", "AI检测评测", "freemium", "海外", ["api", "team"], ["paper"], 79, ["AI检测", "教育", "写作"]],
+  ["Winston AI", "gowinston.ai", "AI检测评测", "paid", "海外", ["team"], ["paper"], 76, ["AI检测", "团队", "内容"]],
+  ["ZeroGPT", "zerogpt.com", "AI检测评测", "freemium", "海外", ["api"], ["paper"], 73, ["AI检测", "文本", "免费"]],
+  ["DeepEval", "deepeval.com", "AI检测评测", "freemium", "海外", ["api", "team"], ["code", "automation"], 80, ["LLM评测", "测试", "开发"]],
+  ["Ragas", "ragas.io", "AI检测评测", "free", "海外", ["api"], ["code", "research"], 80, ["RAG评测", "开源", "指标"]],
+  ["Helicone", "helicone.ai", "AI检测评测", "freemium", "海外", ["api", "team"], ["code", "automation"], 80, ["可观测", "LLM", "成本"]],
+  ["LangSmith", "smith.langchain.com", "AI检测评测", "freemium", "海外", ["api", "team"], ["code", "automation"], 84, ["评测", "追踪", "Agent"]],
+  ["Harvey", "harvey.ai", "法律财税", "paid", "海外", ["team"], ["research", "paper"], 82, ["法律AI", "企业", "文档"]],
+  ["Spellbook", "spellbook.legal", "法律财税", "paid", "海外", ["team"], ["paper"], 77, ["合同", "法律", "Word"]],
+  ["DoNotPay", "donotpay.com", "法律财税", "paid", "海外", ["mobile"], ["research"], 73, ["消费者权益", "法律", "自动化"]],
+  ["Blue J", "bluej.com", "法律财税", "paid", "海外", ["team"], ["research"], 75, ["税务", "法律研究", "预测"]],
+  ["Paxton AI", "paxton.ai", "法律财税", "paid", "海外", ["team"], ["research", "paper"], 76, ["法律研究", "合同", "文档"]],
+];
+
+const tools = [...coreTools, ...toolSeedRows.map(createSeedTool)];
+
 const stacks = [
   {
     title: "论文速读",
@@ -1266,7 +1454,79 @@ const stacks = [
     scenario: "ecommerce",
     note: "商品图、详情文案和短视频一起打包，提高上新效率。",
   },
+  {
+    title: "资料检索",
+    tools: ["秘塔AI搜索", "Perplexity", "NotebookLM"],
+    category: "AI搜索",
+    scenario: "research",
+    note: "先做中文或英文搜索，再把可信来源沉淀成可追问的资料库。",
+  },
+  {
+    title: "海报设计",
+    tools: ["Canva", "稿定设计", "Midjourney"],
+    category: "图像设计",
+    scenario: "design",
+    note: "先确定版式和文案，再生成视觉素材，最后用模板工具交付成品。",
+  },
+  {
+    title: "代码助手",
+    tools: ["DeepSeek", "GitHub Copilot", "Cursor"],
+    category: "编程开发",
+    scenario: "code",
+    note: "先用模型拆解问题，再在 IDE 内补全和重构，最后回到项目里验证。",
+  },
 ];
+
+const taskAdviceByScenario = {
+  research: {
+    intent: "适合做选题调研、竞品资料、行业信息和可信来源汇总。",
+    keywords: ["资料", "检索", "搜索", "调研", "来源", "竞品", "行业", "research", "搜索资料"],
+  },
+  paper: {
+    intent: "适合快速读论文、追引用、做文献综述和解释难段落。",
+    keywords: ["论文", "文献", "引用", "综述", "paper", "学术", "研究", "读论文"],
+  },
+  design: {
+    intent: "适合做海报、封面、商品图、社媒配图和视觉草稿。",
+    keywords: ["海报", "设计", "图片", "封面", "商品图", "配图", "视觉", "poster", "image"],
+  },
+  video: {
+    intent: "适合短视频脚本、镜头生成、数字人口播和配音配乐。",
+    keywords: ["视频", "短视频", "镜头", "口播", "剪辑", "配音", "video", "数字人"],
+  },
+  code: {
+    intent: "适合写代码、读报错、解释函数、补测试和修复小功能。",
+    keywords: ["代码", "编程", "开发", "报错", "测试", "函数", "code", "debug"],
+  },
+  slides: {
+    intent: "适合从大纲生成 PPT 初稿，再按品牌和演讲节奏微调。",
+    keywords: ["ppt", "PPT", "幻灯片", "演示", "汇报", "课件", "slides"],
+  },
+  "web-mvp": {
+    intent: "适合快速做网页原型、简历网站、产品 MVP 和前端界面。",
+    keywords: ["web", "网页", "网站", "mvp", "原型", "前端", "页面", "简历网站"],
+  },
+  automation: {
+    intent: "适合把重复工作拆成流程，用 Agent 或自动化工具串起来。",
+    keywords: ["自动化", "agent", "智能体", "流程", "工作流", "任务", "automation"],
+  },
+  local: {
+    intent: "适合本地模型、隐私数据、开源实验和离线工作流。",
+    keywords: ["本地", "开源", "私有", "隐私", "部署", "离线", "local", "模型"],
+  },
+  resume: {
+    intent: "适合简历润色、英文表达、求职材料和岗位匹配。",
+    keywords: ["简历", "求职", "履历", "岗位", "面试", "resume", "cv"],
+  },
+  "ai-coding": {
+    intent: "适合较完整的软件开发协作：编码、理解项目、审查质量和补测试。",
+    keywords: ["ai编程", "AI编程", "cursor", "ide", "代码助手", "项目", "重构", "coding"],
+  },
+  ecommerce: {
+    intent: "适合商品图、详情文案、上新素材和电商短视频。",
+    keywords: ["电商", "商品", "运营", "上新", "详情页", "店铺", "ecommerce", "shopify"],
+  },
+};
 
 const defaultFilters = {
   query: "",
@@ -1306,12 +1566,19 @@ const elements = {
   advancedFilters: document.querySelector("#advancedFilters"),
   advancedFilterToggle: document.querySelector("#advancedFilterToggle"),
   activeFilters: document.querySelector("#activeFilters"),
+  taskAdvisor: document.querySelector("#taskAdvisor"),
   categoryButtons: document.querySelector("#categoryButtons"),
   toolGrid: document.querySelector("#toolGrid"),
   resultCount: document.querySelector("#resultCount"),
   resultLabel: document.querySelector("#resultLabel"),
+  heroToolCount: document.querySelector("#heroToolCount"),
+  heroCategoryCount: document.querySelector("#heroCategoryCount"),
+  heroApiCount: document.querySelector("#heroApiCount"),
   toolCount: document.querySelector("#toolCount"),
   categoryCount: document.querySelector("#categoryCount"),
+  statFreeCount: document.querySelector("#statFreeCount"),
+  statApiCount: document.querySelector("#statApiCount"),
+  statLocalCount: document.querySelector("#statLocalCount"),
   freeCount: document.querySelector("#freeCount"),
   apiCount: document.querySelector("#apiCount"),
   localCount: document.querySelector("#localCount"),
@@ -1418,10 +1685,6 @@ function getOverviewCounts() {
   };
 }
 
-function scenarioLabel(value) {
-  return scenarios.find((scenario) => scenario.value === value)?.label || value;
-}
-
 function createTextElement(tagName, className, text) {
   const element = document.createElement(tagName);
   if (className) element.className = className;
@@ -1440,7 +1703,7 @@ function applyTheme() {
   document.documentElement.dataset.theme = resolved;
 
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  if (themeColor) themeColor.content = resolved === "dark" ? "#0b1117" : "#0f766e";
+  if (themeColor) themeColor.content = resolved === "dark" ? "#0a0a0a" : "#4f46e5";
 
   const label = { light: "浅色", dark: "深色", system: "跟随系统" }[state.theme];
   const icon = { light: "○", dark: "●", system: "◐" }[state.theme];
@@ -1579,6 +1842,166 @@ function renderActiveFilters() {
   });
 }
 
+function getToolByName(name) {
+  const target = normalize(name);
+  return tools.find((tool) => normalize(tool.name) === target);
+}
+
+function getStackTools(stack) {
+  return stack.tools.map(getToolByName).filter(Boolean);
+}
+
+function getStackSearchText(stack) {
+  const advice = taskAdviceByScenario[stack.scenario];
+  const stackTools = getStackTools(stack);
+  return normalize(
+    [
+      stack.title,
+      stack.category,
+      stack.scenario,
+      scenarioLabel(stack.scenario),
+      stack.note,
+      advice?.intent,
+      ...(advice?.keywords || []),
+      ...stack.tools,
+      ...stackTools.flatMap((tool) => [tool.description, tool.bestFor, ...tool.tags]),
+    ].join(" "),
+  );
+}
+
+function scoreTaskStack(stack) {
+  const hasIntent =
+    state.query ||
+    state.scenario !== defaultFilters.scenario ||
+    state.category !== defaultFilters.category ||
+    state.capability !== defaultFilters.capability;
+  if (!hasIntent) return 0;
+
+  const advice = taskAdviceByScenario[stack.scenario];
+  const searchText = getStackSearchText(stack);
+  const rawQuery = normalize(state.query);
+  const tokens = queryTokens();
+  let score = 0;
+
+  if (state.scenario !== defaultFilters.scenario) {
+    score += stack.scenario === state.scenario ? 16 : -4;
+  }
+
+  if (state.category !== defaultFilters.category) {
+    score += stack.category === state.category ? 5 : -1;
+  }
+
+  if (state.capability !== defaultFilters.capability) {
+    const hasCapability = getStackTools(stack).some((tool) => tool.capabilities.includes(state.capability));
+    score += hasCapability ? 3 : -1;
+  }
+
+  if (rawQuery) {
+    if (searchText.includes(rawQuery)) score += 8;
+    tokens.forEach((token) => {
+      if (searchText.includes(token)) score += 3;
+    });
+    (advice?.keywords || []).forEach((keyword) => {
+      const normalizedKeyword = normalize(keyword);
+      if (rawQuery.includes(normalizedKeyword) || normalizedKeyword.includes(rawQuery)) score += 5;
+    });
+  }
+
+  return score;
+}
+
+function getTaskAdvice() {
+  const candidates = stacks
+    .map((stack, index) => ({ stack, index, score: scoreTaskStack(stack) }))
+    .filter((candidate) => candidate.score > 0)
+    .sort((a, b) => b.score - a.score || a.index - b.index);
+
+  return candidates[0] || null;
+}
+
+function getStackFilterUrl(stack) {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams();
+  params.set("category", stack.category);
+  params.set("scenario", stack.scenario);
+  url.search = params.toString();
+  url.hash = "directory";
+  return url.toString();
+}
+
+function addStackToCompare(stack) {
+  stack.tools.forEach((name) => {
+    if (state.compare.has(name) || state.compare.size < 4) state.compare.add(name);
+  });
+  saveStoredSet("compare", state.compare);
+  render();
+}
+
+function renderTaskAdvisor(filtered) {
+  const candidate = getTaskAdvice();
+  elements.taskAdvisor.innerHTML = "";
+
+  if (!candidate) {
+    elements.taskAdvisor.hidden = true;
+    return;
+  }
+
+  const { stack } = candidate;
+  const advice = taskAdviceByScenario[stack.scenario];
+  const stackTools = getStackTools(stack);
+  const matchingTools = stackTools.filter(toolMatches);
+
+  elements.taskAdvisor.hidden = false;
+
+  const content = document.createElement("div");
+  content.className = "advisor-content";
+
+  const label = createTextElement("span", "advisor-kicker", "任务建议");
+  const title = createTextElement("strong", "", `你可能要做：${stack.title}`);
+  const note = createTextElement("p", "", advice?.intent || stack.note);
+  content.append(label, title, note);
+
+  const meta = document.createElement("div");
+  meta.className = "advisor-meta";
+  meta.append(createTag(`${filtered.length} 个当前结果`));
+  meta.append(createTag(`${matchingTools.length || stackTools.length} 个链路工具`));
+  meta.append(createTag(stack.category));
+  content.append(meta);
+
+  const toolList = document.createElement("div");
+  toolList.className = "advisor-tools";
+  stackTools.slice(0, 3).forEach((tool, index) => {
+    const item = document.createElement("article");
+    item.append(createTextElement("span", "", String(index + 1).padStart(2, "0")));
+    item.append(createTextElement("strong", "", tool.name));
+    item.append(createTextElement("small", "", tool.bestFor));
+    toolList.append(item);
+  });
+
+  const actions = document.createElement("div");
+  actions.className = "advisor-actions";
+
+  const applyButton = document.createElement("button");
+  applyButton.type = "button";
+  applyButton.className = "advisor-button is-primary";
+  applyButton.textContent = "套用筛选";
+  applyButton.addEventListener("click", () => applyStack(stack));
+
+  const compareButton = document.createElement("button");
+  compareButton.type = "button";
+  compareButton.className = "advisor-button";
+  compareButton.textContent = "加入对比";
+  compareButton.addEventListener("click", () => addStackToCompare(stack));
+
+  const shareLink = document.createElement("a");
+  shareLink.className = "advisor-link";
+  shareLink.href = getStackFilterUrl(stack);
+  shareLink.textContent = "打开该任务链接";
+
+  actions.append(applyButton, compareButton, shareLink);
+  elements.taskAdvisor.append(content, toolList, actions);
+}
+
 function toolMatches(tool) {
   const text = normalize(
     [
@@ -1647,13 +2070,14 @@ function renderCard(tool) {
 
   const tags = node.querySelector(".tag-row");
   const priceClass = tool.price === "paid" ? "price-paid" : "price-free";
-  const tagItems = [priceLabel[tool.price], tool.region, tool.category, ...tool.tags];
-  const maxTags = state.cardView === "compact" ? 3 : 4;
+  const capabilityTags = tool.capabilities.map((capability) => capabilityLabel[capability] || capability);
+  const tagItems = [priceLabel[tool.price], tool.region, tool.category, ...capabilityTags, ...tool.tags];
+  const maxTags = state.cardView === "compact" ? 4 : 6;
   const visibleTags = tagItems.length > maxTags ? tagItems.slice(0, maxTags - 1) : tagItems.slice(0, maxTags);
   visibleTags.forEach((tag, index) => {
     tags.append(createTag(tag, index === 0 ? priceClass : ""));
   });
-  if (tagItems.length > maxTags) tags.append(createTag(`+${tagItems.length - maxTags}`));
+  if (tagItems.length > maxTags) tags.append(createTag(`+${tagItems.length - visibleTags.length}`));
 
   saveButton.classList.toggle("is-active", state.favorites.has(tool.name));
   saveButton.textContent = state.favorites.has(tool.name) ? "★" : "☆";
@@ -1755,7 +2179,7 @@ function renderFilters() {
 
 function renderStacks() {
   elements.stackList.innerHTML = "";
-  stacks.forEach((stack) => {
+  stacks.slice(0, 4).forEach((stack) => {
     const item = document.createElement("article");
     item.className = "stack-item";
     item.append(createTextElement("strong", "", stack.title));
@@ -1884,13 +2308,20 @@ function render() {
       ? "个收藏结果"
       : "个结果";
   elements.emptyState.hidden = filtered.length > 0;
+  elements.heroToolCount.textContent = tools.length;
+  elements.heroCategoryCount.textContent = categories.length - 1;
+  elements.heroApiCount.textContent = overview.api;
   elements.toolCount.textContent = tools.length;
   elements.categoryCount.textContent = categories.length - 1;
+  elements.statFreeCount.textContent = overview.free;
+  elements.statApiCount.textContent = overview.api;
+  elements.statLocalCount.textContent = overview.local;
   elements.freeCount.textContent = overview.free;
   elements.apiCount.textContent = overview.api;
   elements.localCount.textContent = overview.local;
   elements.savedCount.textContent = state.favorites.size;
 
+  renderTaskAdvisor(filtered);
   renderFilters();
   applyAdvancedFilters();
   renderActiveFilters();
